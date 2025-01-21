@@ -1,6 +1,5 @@
 function fibo(n: number,arr : number[]){
-    if(n === 0) return 0;
-    if(n === 1) return 1;
+    if(n <= 1) return n;
     else {
         arr[n] = fibo(n-1,arr) + fibo(n-2,arr);
         return arr[n];
