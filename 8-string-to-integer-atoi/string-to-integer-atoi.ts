@@ -1,25 +1,43 @@
-function myAtoi(s: string): number {
-   const len = s.length;
-   let result = 0;
-   let sign = 1;
-   for(let i=0; i<len; i++){
-    //    step 1:
-       if(s[i]===' ') continue;
-    //    step 2:
-       if(s[i] === '+' || s[i]==='-'){
-           sign = s[i] === '-' ? -1 : 1;
-           if(!/[0-9]/.test(s[i+1])) return 0;
-       }
-    //    step 3:
-        if(/[0-9]/.test(s[i])){
-            result = result*10 + (+s[i]);
-            if(!/[0-9]/.test(s[i+1])) break;
-        }
-    // break point:
-        if(/[a-zA-Z.]/.test(s[i])){
-            return 0;
-        }
-   }   
-   return sign === -1 ? Math.max(-(2 ** 31), -result) : Math.min(2 ** 31 - 1, result);
-// perfect mess but documented xd
-};
+function myAtoi(s) {
+  let index = 0;
+  let sign = 1;
+  let result = 0;
+  const INT_MAX = 2 ** 31 - 1;
+  const INT_MIN = -(2 ** 31);
+
+  while (index < s.length) {
+    const char = s[index];
+
+    if (char === ' ') {
+      index++;
+      continue; 
+    }
+
+    if (char === '+' || char === '-') {
+      sign = char === '-' ? -1 : 1;
+      index++;
+      break; 
+    }
+
+    if (char >= '0' && char <= '9') {
+      break; // Exit and continue with the digit processing
+    }
+
+    return 0;
+  }
+
+  // Process digits in the same loop
+  while (index < s.length && s[index] >= '0' && s[index] <= '9') {
+    const digit = s[index] - 0;
+
+    if (result > Math.floor(INT_MAX / 10) || 
+        (result === Math.floor(INT_MAX / 10) && digit > INT_MAX % 10)) {
+      return sign === 1 ? INT_MAX : INT_MIN;
+    }
+
+    result = result * 10 + digit;
+    index++;
+  }
+
+  return result * sign;
+}
