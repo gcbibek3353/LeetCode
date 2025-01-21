@@ -1,14 +1,16 @@
-function fibo(n: number,arr : number[]){
-    if(n <= 1) return n;
-    else {
-        arr[n] = fibo(n-1,arr) + fibo(n-2,arr);
-        return arr[n];
-    }
-}
 
-function fib(n: number): number { 
-   let arr = Array.from(Array(10), ()=>0);
+   let arr = [];
     arr[0] = 0;
     arr[1] = 1;
-    return fibo(n,arr)
+
+function fib(n: number): number { 
+     if(n <= 1) return n;
+     else{
+        if(arr[n]) return arr[n];
+        else{
+            arr[n] = fib(n-1) + fib(n-2);
+            return arr[n];
+        }
+     }
+    return fib(n);
 };
