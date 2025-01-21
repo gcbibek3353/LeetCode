@@ -7,9 +7,8 @@ function fibo(n: number,arr : number[]){
     }
 }
 
-function fib(n: number): number {
-   let i = 0;  
-   let arr = Array.from(Array(10), ()=>i++);
+function fib(n: number): number { 
+   let arr = Array.from(Array(10), ()=>0);
     arr[0] = 0;
     arr[1] = 1;
     return fibo(n,arr)
