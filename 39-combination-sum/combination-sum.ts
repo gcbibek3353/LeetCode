@@ -1,21 +1,29 @@
 function combinationSum(candidates: number[], target: number): number[][] {
-    const result: number[][] = [];
+    const ans: number[][] = [];
 
-    function backtrack(start: number, target: number, combination: number[]) {
-        if (target === 0) {
-            result.push([...combination]);
+    function findCombination(index: number, arr: number[], sum: number) {
+        // Base case: if the sum equals the target, add the combination to the result
+        if (sum === target) {
+            ans.push([...arr]);
             return;
         }
-        if (target < 0) return;
 
-        for (let i = start; i < candidates.length; i++) {
-            const candidate = candidates[i];
-            combination.push(candidate);
-            backtrack(i, target - candidate, combination);
-            combination.pop();
+        // Base case: if the sum exceeds the target or index goes out of bounds, stop
+        if (sum > target || index >= candidates.length) {
+            return;
         }
+
+        // Include the current candidate (can be used multiple times)
+        arr.push(candidates[index]);
+        sum += candidates[index];
+        findCombination(index, arr, sum );
+        sum -= candidates[index]; // Recurse with the same index
+        arr.pop();
+
+        // Exclude the current candidate and move to the next
+        findCombination(index + 1, arr, sum);
     }
 
-    backtrack(0, target, []);
-    return result;
+    findCombination(0, [], 0);
+    return ans;
 }
