@@ -16,12 +16,7 @@ function canConstruct(ransomNote: string, magazine: string): boolean {
         else
         magazineMap.set(magazine.charAt(i),magazineMap.get(magazine.charAt(i)) + 1);
     }
-    // console.log(ransomNoteMap);
-    // console.log(magazineMap);
     ransomNoteMap.forEach((value,key)=>{
-        // console.log(value);
-        // console.log(key);
-        // console.log(magazineMap.get(key));
         if((magazineMap.get(key) == undefined ) || (magazineMap.get(key) < value)) canConstruct = false;
     })
     return canConstruct;
