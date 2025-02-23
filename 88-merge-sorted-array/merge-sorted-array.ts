@@ -12,7 +12,7 @@ function merge(nums1: number[], m: number, nums2: number[], n: number): void {
             nums1[i --] = nums1[p1 --];
             if(p1 < 0) break;
         }
-        if(nums2[p2] >= nums1[p1]){
+        else if(nums2[p2] >= nums1[p1]){
             nums1[i --] = nums2[p2 --];
             if(p2 < 0) return;
         }
