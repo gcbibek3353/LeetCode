@@ -13,14 +13,6 @@
  */
 
 function countNodes(root: TreeNode | null): number {
-      if(root === null) return 0;
-    let leftCount = countNodes(root.left);
-    let rightCount = countNodes(root.right);
-    return leftCount + rightCount + 1;
+    if(root === null) return 0;
+    return countNodes(root.left) + countNodes(root.right) + 1;
 };
-// function count(root : TreeNode | null) : number{
-//     if(root === null) return 0;
-//     let leftCount = count(root.left);
-//     let rightCount = count(root.right);
-//     return leftCount + rightCount + 1;
-// }
