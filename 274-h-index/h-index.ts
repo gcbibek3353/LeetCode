@@ -1,15 +1,16 @@
 function hIndex(citations: number[]): number {
-    let max = Math.max(...citations);
-    const citationBucket = new Array(max + 1).fill(0);
-    // console.log(citationBucket);
-    for(let i = 0; i < citations.length; i ++){
-        citationBucket[citations[i]] ++;
+    let papers = citations.length;
+    let citationBuckets = new Array(papers + 1).fill(0);
+
+    for (let citation of citations) {
+        citationBuckets[Math.min(citation, papers)] += 1;
     }
-    // console.log(citationBucket);
-    let cumSum = 0;
-    for(let i = citationBucket.length - 1; i >= 0; i --){
-        cumSum += citationBucket[i];
-        if(cumSum >= i) return i;        
-    }
-    return -1;
+
+    let cumulativePapers = 0;
+    for (let hIndex = papers; hIndex >= 0; hIndex--) {
+        cumulativePapers += citationBuckets[hIndex];
+        if (cumulativePapers >= hIndex) {
+            return hIndex;
+        }
+    }    
 };
