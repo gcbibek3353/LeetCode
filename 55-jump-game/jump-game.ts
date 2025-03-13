@@ -1,8 +1,7 @@
 function canJump(nums: number[]): boolean {
-  let goal = nums.length - 1;
-  for(let i = nums.length - 2; i >= 0; i --) {
-    if(i + nums[i] >= goal ) goal = i;
-  }  
-  if(goal === 0) return true;
-  return false;
+  let target = nums.length - 1;
+  for(let i = nums.length - 2; i >= 0; i --){
+    if(i + nums[i] >= target) target = i;
+  }
+  return target === 0;
 };
