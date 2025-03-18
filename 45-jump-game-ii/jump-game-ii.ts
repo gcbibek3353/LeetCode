@@ -1,16 +1,16 @@
 function jump(nums: number[]): number {
-    let near = 0;
-    let far = 0;
-    let jumps = 0;
+    let l = 0;
+    let r = 0;
+    let jumpCount = 0;
 
-    while(far < nums.length - 1){
-        let farthest = 0;
-        for(let i = near; i <= far; i ++){
-            farthest = Math.max(farthest, i + nums[i]);
+    while(r < nums.length - 1){
+        let curFarthest = 0;
+        for(let i = l; i <= r; i ++) {
+            curFarthest = Math.max(curFarthest,i + nums[i]);
         }
-        near = far + 1;
-        far = farthest;
-        jumps ++;
+        l = r + 1;
+        r = curFarthest;
+        jumpCount ++;
     }
-    return jumps;
+    return jumpCount;
 };
