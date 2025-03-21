@@ -2,24 +2,68 @@
  Do not return anything, modify matrix in-place instead.
  */
 function setZeroes(matrix: number[][]): void {
-    let rowsToMadeZeros = [];
-    let colsToMadeZeros = [];
-    for(let i = 0; i < matrix.length; i ++){
-        for(let j = 0; j < matrix[0].length; j ++){
-            if(matrix[i][j] === 0){
-                rowsToMadeZeros.push(i);
-                colsToMadeZeros.push(j);
+    const rows = matrix.length;
+    const cols = matrix[0].length;
+
+    let first_row_has_zero = false;
+    let first_col_has_zero = false;
+
+    // Check if the first row contains zero
+    for (let c = 0; c < cols; c++) {
+        if (matrix[0][c] === 0) {
+            first_row_has_zero = true;
+            break;
+        }
+    }
+
+    // Check if the first column contains zero
+    for (let r = 0; r < rows; r++) {
+        if (matrix[r][0] === 0) {
+            first_col_has_zero = true;
+            break;
+        }
+    }
+
+    // Use the first row and column as markers
+    for (let r = 1; r < rows; r++) {
+        for (let c = 1; c < cols; c++) {
+            if (matrix[r][c] === 0) {
+                matrix[r][0] = 0;
+                matrix[0][c] = 0;
             }
         }
     }
-    for(let i = 0; i < rowsToMadeZeros.length; i ++){
-        for(let j = 0; j < matrix[0].length; j ++){
-            matrix[rowsToMadeZeros[i]][j] = 0;
+
+    // Set the marked rows to zero
+    for (let r = 1; r < rows; r++) {
+        if (matrix[r][0] === 0) {
+            for (let c = 1; c < cols; c++) {
+                matrix[r][c] = 0;
+            }
         }
     }
-    for(let i = 0; i < matrix.length; i ++){
-        for(let j = 0; j < colsToMadeZeros.length; j ++){
-            matrix[i][colsToMadeZeros[j]] = 0;
+
+    // Set the marked columns to zero
+    for (let c = 1; c < cols; c++) {
+        if (matrix[0][c] === 0) {
+            for (let r = 1; r < rows; r++) {
+                matrix[r][c] = 0;
+            }
         }
     }
+
+    // Set the first row to zero if needed
+    if (first_row_has_zero) {
+        for (let c = 0; c < cols; c++) {
+            matrix[0][c] = 0;
+        }
+    }
+
+    // Set the first column to zero if needed
+    if (first_col_has_zero) {
+        for (let r = 0; r < rows; r++) {
+            matrix[r][0] = 0;
+        }
+    }
+
 };
