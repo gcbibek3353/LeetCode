@@ -1,21 +1,18 @@
 function merge(nums1: number[], m: number, nums2: number[], n: number): void {
-    if(n === 0) return;
-    let i = m + n - 1;
     let p1 = m - 1;
     let p2 = n - 1;
-    if(m === 0) {
-        while(p2 >= 0) nums1[i --] = nums2[p2 --];
-        return;
+    //    for(let i = nums1.length - 1 ; i >= 0; i --){
+    //         if(nums2[p2] >= nums1[p1] && p2 >= 0) nums1[i] = nums2[p2 --];
+    //         else if(nums2[p2] < nums1[p1] && p1 >= 0) nums1[i] = nums1[p1 --];
+    //    }
+    let i = nums1.length - 1;
+    while (p1 >= 0 && p2 >= 0) {
+        if (p2 < 0) return;
+        if (p1 < 0) break;
+        if (nums2[p2] >= nums1[p1]) nums1[i --] = nums2[p2--];
+        else nums1[i --] = nums1[p1--];
     }
-    while(i >= 0){
-        if(nums1[p1] > nums2[p2]){
-            nums1[i --] = nums1[p1 --];
-            if(p1 < 0) break;
-        }
-        else if(nums2[p2] >= nums1[p1]){
-            nums1[i --] = nums2[p2 --];
-            if(p2 < 0) return;
-        }
+    while(p2 >= 0){
+        nums1[p2] = nums2[p2 --];
     }
-    while(p2 >= 0) nums1[i --] = nums2[p2 --];
 };
