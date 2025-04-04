@@ -15,8 +15,12 @@
 function isSymmetric(root: TreeNode | null): boolean {
     return isMirror(root,root);
 };
-function isMirror(left : TreeNode | null , right : TreeNode | null){
-    if(left === null && right === null) return true;
-    else if ((left !== null && right === null) || (left === null && right !== null)) return false;
-    else return left.val === right.val && isMirror(left.left,right.right) && isMirror(left.right,right.left);
+
+const isMirror = (leftNode : TreeNode , rightNode : TreeNode) => {
+    if(leftNode === null) return rightNode === null;
+    if(rightNode === null) return leftNode === null;
+    if(leftNode.val !== rightNode.val) return false;
+    const leftCheck = isMirror(leftNode.left , rightNode.right);
+    const rightCheck = isMirror(leftNode.right , rightNode.left);
+    return leftCheck && rightCheck;
 }
