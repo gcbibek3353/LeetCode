@@ -1,11 +1,14 @@
 function maxProfit(prices: number[]): number {
-    let curMin = prices[0];
     let maxProfit = 0;
-    for(let i = 1; i < prices.length; i ++){
-         if(prices[i] > curMin)
-         maxProfit = Math.max(maxProfit,prices[i] - curMin);
-         else 
-         curMin = Math.min(curMin,prices[i]);
+    let minPrice = Number.MAX_SAFE_INTEGER;
+    for(let i = 0; i < prices.length; i ++){
+        if(prices[i] < minPrice){
+            minPrice = prices[i];
+        }
+        else{
+            let profit = prices[i] - minPrice;
+            maxProfit = Math.max(profit,maxProfit);
+        }
     }
     return maxProfit;
 };
