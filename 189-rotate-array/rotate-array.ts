@@ -6,5 +6,7 @@ function rotate(nums: number[], k: number): void {
   for(let i = 0; i < nums.length; i ++){
     result[(i + k ) % nums.length] = nums[i];
   }
-  for(let i = 0; i < nums.length; i ++) nums[i] = result[i];
+  for(let i = 0; i < nums.length; i ++) {
+    nums[i] = result[i];
+  }
 };
