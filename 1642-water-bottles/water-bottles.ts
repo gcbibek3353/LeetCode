@@ -1,11 +1,11 @@
 function numWaterBottles(numBottles: number, numExchange: number): number {
     let ans = numBottles;
-    let empty = numBottles;
+    let empty = ans;
 
-    while (empty >= numExchange) {
-        let newBottles = Math.floor(empty / numExchange);
-        ans += newBottles;
-        empty = (empty % numExchange) + newBottles;
+    while (empty / numExchange >= 1) {
+        numBottles = Math.floor(empty / numExchange);
+        ans += numBottles;
+        empty = (empty % numExchange) + numBottles;
     }
 
     return ans;
