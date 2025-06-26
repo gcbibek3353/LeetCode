@@ -5,7 +5,7 @@ function fib(n: number): number {
         else if(n === 1) return 1;
 
         if(arr[n]) return arr[n];
-        else return fibbo(n-2) + fibbo(n - 1);
+        else return arr[n] = fibbo(n-2) + fibbo(n - 1);
     }
     return fibbo(n);
 };
