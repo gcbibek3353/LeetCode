@@ -1,20 +1,12 @@
 function sortedSquares(nums: number[]): number[] {
+    let ans = [];
     let l = 0;
     let r = nums.length - 1;
-    let i = r;
-    const ans = new Array(nums.length);
-
-   while(l <= r){
-    let lNumber = nums[l] * nums[l];
-    let rNumber = nums[r] * nums[r];
-    if(lNumber >= rNumber) {
-        ans[i --] = lNumber;
-        l ++;
+    while(l <= r){
+        if(sqr(nums[l]) >= sqr(nums[r])) ans.unshift(sqr(nums[l ++]));
+        else ans.unshift(sqr(nums[r --]));
     }
-    else{
-     ans[i --] = rNumber;
-    r--;
-    }
-   }
     return ans;
 };
+
+const sqr = (n : number) : number => (n * n);
