@@ -1,31 +1,33 @@
 function findMedianSortedArrays(nums1: number[], nums2: number[]): number {
-    let finalArr = new Array();
-    let p1 = 0;
-    let p2 = 0;
-    let n1 = nums1.length;
-    let n2 = nums2.length;
-
-    while (p1 < n1 || p2 < n2) {
-        if (p1 >= n1) {
-            finalArr.push(nums2[p2++]);
-            continue;
-        }
-        if (p2 >= n2) {
-            finalArr.push(nums1[p1++]);
-            continue;
-        }
-
-        if (nums1[p1] <= nums2[p2]) {
-            finalArr.push(nums1[p1++]);
-        }
-        else finalArr.push(nums2[p2++])
+    if (nums1.length > nums2.length) {
+        return findMedianSortedArrays(nums2, nums1);
     }
-    console.log(finalArr)
 
-    let midIndex = Math.floor(finalArr.length / 2);
-    console.log(midIndex);
-    if (finalArr.length % 2 === 0) {
-        return ((finalArr[midIndex] + finalArr[midIndex - 1]) / 2);
+    const m = nums1.length;
+    const n = nums2.length;
+    let left = 0;
+    let right = m;
+
+    while (left <= right) {
+        const i = Math.floor((left + right) / 2);
+        const j = Math.floor((m + n + 1) / 2) - i;
+
+        const maxLeftA = i === 0 ? -Infinity : nums1[i - 1];
+        const minRightA = i === m ? Infinity : nums1[i];
+
+        const maxLeftB = j === 0 ? -Infinity : nums2[j - 1];
+        const minRightB = j === n ? Infinity : nums2[j];
+
+        if (maxLeftA <= minRightB && maxLeftB <= minRightA) {
+            if ((m + n) % 2 === 0) {
+                return (Math.max(maxLeftA, maxLeftB) + Math.min(minRightA, minRightB)) / 2;
+            } else {
+                return Math.max(maxLeftA, maxLeftB);
+            }
+        } else if (maxLeftA > minRightB) {
+            right = i - 1;
+        } else {
+            left = i + 1;
+        }
     }
-    else return finalArr[midIndex];
 };
