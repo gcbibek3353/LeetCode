@@ -1,17 +1,12 @@
 function increasingTriplet(nums: number[]): boolean {
   let first = Infinity;
   let second = Infinity;
-
-  for (const num of nums) {
-    if (num <= first) {
-      first = num;           // new smallest
-    } else if (num <= second) {
-      second = num;          // better middle
-    } else {
-      // Found a number > second ⇒ triplet exists
-      return true;
-    }
+  for (let i = 0; i < nums.length; i++) {
+    if (nums[i] <= first) {
+      first = nums[i];
+    } else if (nums[i] <= second) {
+      second = nums[i];
+    } else return true;
   }
-
   return false;
-}
+};
