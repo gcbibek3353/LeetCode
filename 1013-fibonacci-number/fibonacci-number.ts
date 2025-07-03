@@ -1,11 +1,8 @@
-function fib(n: number): number { 
-    let arr = [0];
-    function fibbo(n : number) : number {
-        if(n === 0) return 0;
-        else if(n === 1) return 1;
+function fib(n: number): number {
+    let arr = [0, 1];
 
-        if(arr[n]) return arr[n];
-        else return arr[n] = fibbo(n-2) + fibbo(n - 1);
-    }
-    return fibbo(n);
+    if (n === 0) return 0;
+    if (arr[n]) return arr[n];
+    return arr[n] = (fib(n - 1) + fib(n - 2));
+
 };
