@@ -1,7 +1,6 @@
 function missingNumber(nums: number[]): number {
-    let xorr = 0;
-    for (let i = 0; i < nums.length; i++) {
-        xorr ^= (i + 1) ^ nums[i];
-    }
-    return xorr;
+    let n = nums.length;
+    const MathSum = (n * (n + 1)) / 2;
+    let sum = nums.reduce((accum , n) => accum + n);
+    return MathSum - sum;
 };
