@@ -1,13 +1,21 @@
 function longestConsecutive(nums: number[]): number {
-    let maxLen = 0;
-    let set = new Set<number>();
-    for(let num of nums)set.add(num);
-    for(let num of set){
-        if(!set.has(num - 1)){
-            let curLen = 1;
-            while(set.has(num + curLen)) curLen ++;
-            maxLen = Math.max(maxLen,curLen);
+    let st = new Set(nums);
+    let maxCount = 0;
+
+    for (let num of st) {
+        // Start of a sequence
+        if (!st.has(num - 1)) {
+            let curNum = num;
+            let curCount = 1;
+
+            while (st.has(curNum + 1)) {
+                curNum++;
+                curCount++;
+            }
+
+            maxCount = Math.max(maxCount, curCount);
         }
     }
-    return maxLen;
-};
+
+    return maxCount;
+}
