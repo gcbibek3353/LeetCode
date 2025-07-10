@@ -1,15 +1,16 @@
 function rearrangeArray(nums: number[]): number[] {
-    let result = new Array<number>();
-    let evenIndex = 0; let oddIndex = 1;
+    let ans = [];
+    let oddIndex = 1;
+    let evenIndex = 0;
     for (let i = 0; i < nums.length; i++) {
-        if (nums[i] > 0) {
-            result[evenIndex] = nums[i]
-            evenIndex += 2;
-        }
-        else {
-            result[oddIndex] = nums[i];
+        if (nums[i] < 0) {
+            ans[oddIndex] = nums[i];
             oddIndex += 2;
         }
+        else {
+            ans[evenIndex] = nums[i];
+            evenIndex += 2;
+        }
     }
-    return result;
+    return ans;
 }
