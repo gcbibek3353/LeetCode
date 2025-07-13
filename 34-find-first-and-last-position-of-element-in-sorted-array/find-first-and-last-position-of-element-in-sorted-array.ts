@@ -1,33 +1,38 @@
 function searchRange(nums: number[], target: number): number[] {
-  function findFirst(): number {
-    let left = 0, right = nums.length - 1;
-    let index = -1;
-    while (left <= right) {
-      const mid = Math.floor((left + right) / 2);
-      if (nums[mid] >= target) {
-        right = mid - 1;
-      } else {
-        left = mid + 1;
-      }
-      if (nums[mid] === target) index = mid;
+    function findFirst(): number {
+        let l = 0, r = nums.length - 1, res = -1;
+        while (l <= r) {
+            let mid = Math.floor((l + r) / 2);
+            if (nums[mid] === target) {
+                res = mid;
+                r = mid - 1; // search left part
+            } else if (nums[mid] < target) {
+                l = mid + 1;
+            } else {
+                r = mid - 1;
+            }
+        }
+        return res;
     }
-    return index;
-  }
 
-  function findLast(): number {
-    let left = 0, right = nums.length - 1;
-    let index = -1;
-    while (left <= right) {
-      const mid = Math.floor((left + right) / 2);
-      if (nums[mid] <= target) {
-        left = mid + 1;
-      } else {
-        right = mid - 1;
-      }
-      if (nums[mid] === target) index = mid;
+    function findLast(): number {
+        let l = 0, r = nums.length - 1, res = -1;
+        while (l <= r) {
+            let mid = Math.floor((l + r) / 2);
+            if (nums[mid] === target) {
+                res = mid;
+                l = mid + 1; // search right part
+            } else if (nums[mid] < target) {
+                l = mid + 1;
+            } else {
+                r = mid - 1;
+            }
+        }
+        return res;
     }
-    return index;
-  }
 
-  return [findFirst(), findLast()];
+    const first = findFirst();
+    const last = findLast();
+
+    return [first, last];
 }
