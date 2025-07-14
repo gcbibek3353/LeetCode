@@ -1,17 +1,19 @@
 function findMin(nums: number[]): number {
-  let left = 0, right = nums.length - 1;
+    let ans = Infinity;
+    let l = 0;
+    let r = nums.length - 1;
 
-  while (left < right) {
-    const mid = Math.floor((left + right) / 2);
-
-    if (nums[mid] > nums[right]) {
-      // Min is in the right half
-      left = mid + 1;
-    } else {
-      // Min is at mid or in the left half
-      right = mid;
+    while (l <= r) {
+        let m = Math.floor((l + r) / 2);
+        if (nums[l] <= nums[m]) {  // left is sorted
+            ans = Math.min(ans, nums[l]);
+            l = m + 1;
+        }
+        else {  // right is sorted
+            ans = Math.min(ans, nums[m]);
+            r = m - 1;
+        }
     }
-  }
 
-  return nums[left];
-}
+    return ans;
+};
