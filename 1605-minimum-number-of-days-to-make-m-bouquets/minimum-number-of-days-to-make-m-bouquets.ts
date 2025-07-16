@@ -24,10 +24,7 @@ function minDays(bloomDay: number[], m: number, k: number): number {
         flowers = 0
       }
 
-      // No need to check further if we already have enough bouquets
-      if (bouquets >= m) {
-        return true
-      }
+   
     }
 
     return bouquets >= m
