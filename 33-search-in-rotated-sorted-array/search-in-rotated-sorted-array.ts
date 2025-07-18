@@ -1,28 +1,18 @@
 function search(nums: number[], target: number): number {
-    let left = 0, right = nums.length - 1;
+    let l = 0;
+    let r = nums.length - 1;
 
-    while (left <= right) {
-        const mid = Math.floor((left + right) / 2);
-
-        if (nums[mid] === target) return mid;
-
-        // Left half is sorted
-        if (nums[left] <= nums[mid]) {
-            if (nums[left] <= target && target < nums[mid]) {
-                right = mid - 1; // search left
-            } else {
-                left = mid + 1; // search right
-            }
-        }
-        // Right half is sorted
+    while ( l <= r) {
+        let m = Math.floor( ( l + r) / 2);
+        if(nums[m] === target) return m;
+        if(nums[l] <= nums[m]) {
+            if(nums[l] <= target && target < nums[m]) r = m - 1;
+            else l = m + 1;
+        } 
         else {
-            if (nums[mid] < target && target <= nums[right]) {
-                left = mid + 1; // search right
-            } else {
-                right = mid - 1; // search left
-            }
+            if(nums[m] < target && nums[r] >= target) l = m + 1;
+            else r = m - 1; 
         }
     }
-
-    return -1; // not found
-}
+    return -1;
+};
