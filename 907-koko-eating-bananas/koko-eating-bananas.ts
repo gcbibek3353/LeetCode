@@ -1,28 +1,25 @@
 function minEatingSpeed(piles: number[], h: number): number {
-    let r = Math.max(...piles);  // O(n) time 
     let l = 1;
+    let r = Math.max(...piles);
     let ans = Infinity;
+
+    function getHoursGivenRate(r: number): number {
+        let hours = 0;
+        for (let i = 0; i < piles.length; i++) {
+            hours += Math.ceil(piles[i] / r);
+        }
+        return hours;
+    }
 
     while (l <= r) {
         let m = Math.floor((l + r) / 2);
-        let time_taken = 0;
-        for (let j = 0; j < piles.length; j++) {
-            time_taken += Math.ceil(piles[j] / m);
-        }
-        if (time_taken <= h) {
+        let hours = getHoursGivenRate(m);
+        if (hours <= h) {
             ans = Math.min(ans, m);
             r = m - 1;
         }
         else l = m + 1;
     }
-
-
-    // for (let i = 1; i <= max; i++) {
-    //     let time_taken = 0;
-    //     for (let j = 0; j < piles.length; j++) {
-    //         time_taken += Math.ceil(piles[j] / i);
-    //     }
-    //     if (time_taken <= h) return i;
-    // }
     return ans;
+
 };
