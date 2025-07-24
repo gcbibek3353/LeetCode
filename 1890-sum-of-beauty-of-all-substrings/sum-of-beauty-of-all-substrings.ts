@@ -1,25 +1,37 @@
 function beautySum(s: string): number {
     const n = s.length;
-    let sum = 0;
+    let totalSum = 0;
 
     for (let i = 0; i < n; i++) {
-        const freqMap: Map<string, number> = new Map();
+        const freq = new Array(26).fill(0); // assuming lowercase letters
+        let maxFreq = 0;
+        const countFreq = new Map(); // key: frequency, value: count of characters with that frequency
 
         for (let j = i; j < n; j++) {
-            const ch = s[j];
-            freqMap.set(ch, (freqMap.get(ch) || 0) + 1);
+            const chIdx = s.charCodeAt(j) - 97;
+            const prevFreq = freq[chIdx];
 
-            let maxFreq = -Infinity;
-            let minFreq = Infinity;
-
-            for (const count of freqMap.values()) {
-                minFreq = Math.min(minFreq, count);
-                maxFreq = Math.max(maxFreq, count);
+            // Decrease count of previousfrequency
+            if (prevFreq > 0) {
+                countFreq.set(prevFreq, countFreq.get(prevFreq)! - 1);
+                if (countFreq.get(prevFreq) === 0) {
+                    countFreq.delete(prevFreq);
+                }
             }
 
-            sum += (maxFreq - minFreq);
+            // Increase frequency of current character
+            freq[chIdx]++;
+            const newFreq = freq[chIdx];
+            countFreq.set(newFreq, (countFreq.get(newFreq) || 0) + 1);
+
+            maxFreq = Math.max(maxFreq, newFreq);
+
+            // Min frequency can be found by checking keys of countFreq
+            const minFreq = Math.min(...countFreq.keys());
+
+            totalSum += (maxFreq - minFreq);
         }
     }
 
-    return sum;
+    return totalSum;
 }
