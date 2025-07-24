@@ -1,29 +1,19 @@
 function frequencySort(s: string): string {
     let mp = new Map<string, string>();
 
-    for (let i = 0; i < s.length; i++) {
-        mp.set(s.charAt(i), (mp.get(s.charAt(i)) || "") + s.charAt(i));
-    }
+    for (let i = 0; i < s.length; i++) mp.set(s.charAt(i),(mp.get(s.charAt(i)) || "") + s.charAt(i));
 
-    let ans = [];
+    let result = [];
+
     for (let [key, value] of mp) {
-        let n = value.length;
-        if (ans[n]) {
-            ans[n] = ans[n] + value;
-        }
-        else {
-            ans[n] = value;
-        }
+        if (result[value.length]) result[value.length] += value;
+        else result[value.length] = value;
     }
 
-    let result = "";
+    let ans = "";
 
-    for (let i = ans.length - 1; i >= 0; i--) {
-        if (ans[i]) {
-            result += ans[i];
-        }
-    }
+    for (let i = result.length; i >= 0; i--) if (result[i]) ans += result[i];
 
-    return result;
+    return ans;
 
 };
