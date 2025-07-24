@@ -8,14 +8,14 @@ function romanToInt(s: string): number {
         ['D', 500],
         ['M', 1000],
     ]);
+  
     let ans = mp.get(s.charAt(s.length - 1));
 
-    for (let i = s.length - 2; i >= 0; i--) {
-        const curVal = mp.get(s.charAt(i));
-        console.log(curVal, ans);
-        if (ans > curVal && s.charAt(i) !== s.charAt(i + 1)) ans -= curVal;
-        else ans += curVal;
-        console.log(ans);
+    for(let i = s.length - 2; i >= 0; i--) {
+        if(mp.get(s.charAt(i)) < mp.get(s.charAt(i + 1))) {
+            ans -= mp.get(s.charAt(i));
+        }
+        else ans += mp.get(s.charAt(i));
     }
     return ans;
 };
