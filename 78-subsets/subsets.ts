@@ -1,12 +1,17 @@
 function subsets(nums: number[]): number[][] {
-    let arr = [];
-    for(let i = 0; i < Math.pow(2,nums.length); i ++){
-        let subarr = [];
-        for(let j = 0; j < 32; j ++){
-            let mask = 1 << j;
-            if((mask & i) != 0) subarr.push(nums[j]);
+    let ans = [];
+    let curArr = [];
+
+    const dfs = (count: number): void => {
+        if (count === nums.length) {
+            ans.push([...curArr]);
+            return;
         }
-        arr.push(subarr);
+        curArr.push(nums[count]);
+        dfs(count + 1);
+        curArr.pop();
+        dfs(count + 1);
     }
-    return arr;
+    dfs(0);
+    return ans;
 };
