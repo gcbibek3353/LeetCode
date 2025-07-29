@@ -1,14 +1,18 @@
 function generateParenthesis(n: number): string[] {
-    let ans = [];
+    const ans = [];
 
-    const dfs = (open: number, closed: number, curStr: string): void => {
-        if (open === closed && open + closed === 2 * n) {
-            ans.push(curStr);
+    const dfs = (oc: number, cc: number, cur: string): void => {
+        if (oc === cc && cur.length === n * 2) {
+            ans.push(cur);
             return;
         }
-
-        if (open < n) dfs(open + 1, closed, curStr + "(");
-        if (closed < open) dfs(open, closed + 1, curStr + ")");
+        if (oc < n) {
+            
+            dfs(oc + 1, cc, cur + "(");
+        }
+        if (cc < oc) {
+            dfs(oc, cc + 1, cur + ")");
+        }
     }
     dfs(0, 0, "");
     return ans;
