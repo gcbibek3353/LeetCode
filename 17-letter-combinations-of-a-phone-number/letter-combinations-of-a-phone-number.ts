@@ -1,26 +1,27 @@
 function letterCombinations(digits: string): string[] {
+    let mp = new Map<number, string>([
+        [2, "abc"],
+        [3, "def"],
+        [4, "ghi"],
+        [5, "jkl"],
+        [6, "mno"],
+        [7, "pqrs"],
+        [8, "tuv"],
+        [9, "wxyz"],
+    ])
+
     let ans = [];
-    let digitToChar = {
-        "2" : "abc",
-        "3" : "def",
-        "4" : "ghi",
-        "5" : "jkl",
-        "6" : "mno",
-        "7" : "pqrs",
-        "8" : "tuv",
-        "9" : "wxyz",
-    }
-    function helper(curString,index){
-        if(curString.length === digits.length){
-            ans.push(curString);
+
+    const helper = (count, curStr) => {
+        if (count === digits.length) {
+            ans.push(curStr);
             return;
         }
-        const chars =  digitToChar[digits[index]];
-        for(let char of chars){
-            helper(curString + char,index + 1);
+        let str = mp.get(parseInt(digits.charAt(count)));
+        for (let i = 0; i < str.length; i++) {
+            helper(count + 1, curStr + str.charAt(i));
         }
     }
-    if(digits)
-    helper("",0);
+    if (digits) helper(0, "");
     return ans;
 };
