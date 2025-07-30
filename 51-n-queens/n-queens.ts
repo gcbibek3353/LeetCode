@@ -1,35 +1,54 @@
 function solveNQueens(n: number): string[][] {
-    const solutions: string[][] = [];
-    const queens: number[] = Array(n).fill(-1);
-    const cols = new Array(n).fill(false);
-    const diag1 = new Array(2 * n - 1).fill(false);
-    const diag2 = new Array(2 * n - 1).fill(false);
+    const result: string[][] = [];
+    const board: string[] = Array(n).fill('.'.repeat(n));
 
-    function backtrack(row: number) {
-        if (row === n) {
-            const board = queens.map(col => '.'.repeat(col) + 'Q' + '.'.repeat(n - col - 1));
-            solutions.push(board);
+    function isSafe1(row: number, col: number): boolean {
+        let dupRow = row, dupCol = col;
+
+        // Upper-left diagonal
+        while (row >= 0 && col >= 0) {
+            if (board[row][col] === 'Q') return false;
+            row--;
+            col--;
+        }
+
+        row = dupRow;
+        col = dupCol;
+
+        // Left row
+        while (col >= 0) {
+            if (board[row][col] === 'Q') return false;
+            col--;
+        }
+
+        row = dupRow;
+        col = dupCol;
+
+        // Bottom-left diagonal
+        while (row < n && col >= 0) {
+            if (board[row][col] === 'Q') return false;
+            row++;
+            col--;
+        }
+
+        return true;
+    }
+
+    function solve(col: number): void {
+        if (col === n) {
+            result.push([...board]);
             return;
         }
 
-        for (let col = 0; col < n; col++) {
-            if (cols[col] || diag1[row - col + n - 1] || diag2[row + col]) {
-                continue;
+        for (let row = 0; row < n; row++) {
+            if (isSafe1(row, col)) {
+                board[row] = board[row].slice(0, col) + 'Q' + board[row].slice(col + 1);
+                solve(col + 1);
+                board[row] = board[row].slice(0, col) + '.' + board[row].slice(col + 1); // backtrack
             }
-
-            queens[row] = col;
-            cols[col] = true;
-            diag1[row - col + n - 1] = true;
-            diag2[row + col] = true;
-
-            backtrack(row + 1);
-
-            cols[col] = false;
-            diag1[row - col + n - 1] = false;
-            diag2[row + col] = false;
         }
     }
 
-    backtrack(0);
-    return solutions;
+    solve(0);
+    return result;
 }
