@@ -1,30 +1,29 @@
 class MyStack {
-    q;
+    q1;
+    q2;
     constructor() {
-         this.q = new Array<number>();
+        this.q1 = new Array();
+        this.q2 = new Array();
     }
 
     push(x: number): void {
-        this.q.push(x);
-        for(let i = 0; i < this.q.length - 1; i ++){
-            this.q.push(this.q.shift());
-        }
+        for (let i = 0; i < this.q1.length; i++) this.q2[i] = this.q1[i];
+        this.q1[0] = x;
+        for (let i = 0; i < this.q2.length; i++) this.q1[i + 1] = this.q2[i];
     }
 
     pop(): number {
-        return this.q.shift();
+       return this.q1.shift();
     }
 
     top(): number {
-        return this.q[0];
+        return this.q1[0];
     }
 
     empty(): boolean {
-        return this.q.length === 0;
-        
+        return (this.q1.length === 0);
     }
 }
-
 
 /**
  * Your MyStack object will be instantiated and called as such:
