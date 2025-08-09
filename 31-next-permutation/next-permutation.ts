@@ -1,21 +1,24 @@
-var nextPermutation = function (nums) {
-    const n = nums.length
-    let i = n - 2
-    while (i >= 0 && nums[i] >= nums[i + 1]) i--
+/**
+ Do not return anything, modify nums in-place instead.
+ */
+function nextPermutation(nums: number[]): void {
+
+    let i = nums.length - 2;
+    while (i >= 0 && nums[i] >= nums[i + 1]) i--;
     if (i >= 0) {
-        let j = n - 1
-        while (nums[j] <= nums[i]) j--
-        swap(nums, i, j)
+        let j = nums.length - 1;
+        while (nums[i] >= nums[j]) j--;
+        swap(nums, i, j);
     }
-    reverse(nums, i + 1)
+
+    reverse(nums, i + 1);
+
 };
 
-function swap(nums, i, j) {
-    [nums[i], nums[j]] = [nums[j], nums[i]]
+const swap = (nums: number[], i: number, j: number): void => {
+    [nums[i], nums[j]] = [nums[j], nums[i]];
 }
-
-function reverse(nums, start) {
-    let end = nums.length - 1
-    while (start < end)
-        swap(nums, start++, end--);
+const reverse = (nums: number[], start: number): void => {
+    let end = nums.length - 1;
+    while (start < end) swap(nums, start++, end--);
 }
