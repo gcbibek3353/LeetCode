@@ -1,5 +1,4 @@
-// ---------- MaxHeap implementation ----------
-class MaxHeap {
+class MinHeap {
     private heap: number[];
 
     constructor() {
@@ -14,7 +13,7 @@ class MaxHeap {
         let idx = this.heap.length - 1;
         while (idx > 0) {
             const parent = Math.floor((idx - 1) / 2);
-            if (this.heap[idx] > this.heap[parent]) {
+            if (this.heap[idx] < this.heap[parent]) {
                 this.swap(idx, parent);
                 idx = parent;
             } else break;
@@ -27,17 +26,17 @@ class MaxHeap {
         while (true) {
             let left = 2 * idx + 1;
             let right = 2 * idx + 2;
-            let largest = idx;
+            let smallest = idx;
 
-            if (left < length && this.heap[left] > this.heap[largest]) {
-                largest = left;
+            if (left < length && this.heap[left] < this.heap[smallest]) {
+                smallest = left;
             }
-            if (right < length && this.heap[right] > this.heap[largest]) {
-                largest = right;
+            if (right < length && this.heap[right] < this.heap[smallest]) {
+                smallest = right;
             }
-            if (largest !== idx) {
-                this.swap(idx, largest);
-                idx = largest;
+            if (smallest !== idx) {
+                this.swap(idx, smallest);
+                idx = smallest;
             } else break;
         }
     }
@@ -58,20 +57,25 @@ class MaxHeap {
         return top;
     }
 
+    peek(): number {
+        return this.heap[0];
+    }
+
     size(): number {
         return this.heap.length;
     }
 }
 
-// using maxHeap to store all the elements and removing k elements from the top.
+// using minHeap of size k to store largest 'k' elements of array .
 function findKthLargest(nums: number[], k: number): number {
-     const maxHeap = new MaxHeap();
+      const minHeap = new MinHeap();
+
     for (let num of nums) {
-        maxHeap.push(num); // O(log n)
+        minHeap.push(num);
+        if (minHeap.size() > k) {
+            minHeap.pop(); // keep heap size <= k
+        }
     }
-    let result = 0;
-    for (let i = 0; i < k; i++) { // O(k log n)
-        result = maxHeap.pop()!;
-    }
-    return result;
+
+    return minHeap.peek();
 };
