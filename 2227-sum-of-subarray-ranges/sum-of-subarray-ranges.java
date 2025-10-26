@@ -2,81 +2,84 @@ class Solution {
     public long subArrayRanges(int[] nums) {
         return subArrayMax(nums) - subArrayMin(nums);
     }
+
     private long subArrayMax(int[] arr) {
-          int n = arr.length;
+        long ans = 0;
         int[] nge = getNGE(arr);
         int[] pgee = getPGEE(arr);
-        long sum = 0;
-        for (int i = 0; i < n; i++) {
-            int left = i - pgee[i];
-            int right = nge[i] - i;
-            long freq = 1L * left * right;
-            sum += freq * arr[i];
+
+        for (int i = 0; i < arr.length; i++) {
+            long freq = 1L * (nge[i] - i) * (i - pgee[i]);
+            ans += freq * arr[i];
         }
-        return sum;
+        return ans;
     }
+   
+    private long subArrayMin(int[] arr) {
+    long ans = 0;
+        int[] nse = getNSE(arr);
+        int[] psee = getPSEE(arr);
+
+        for (int i = 0; i < arr.length; i++) {
+            long freq = 1L * (nse[i] - i) * (i - psee[i]);
+            ans += freq * arr[i];
+        }
+        return ans;
+    }
+
     private int[] getNGE(int[] arr) {
-         int n = arr.length;
+        int n = arr.length;
         int[] ans = new int[n];
         Stack<Integer> st = new Stack<>();
         for (int i = n - 1; i >= 0; i--) {
             while (!st.isEmpty() && arr[st.peek()] <= arr[i]) {
                 st.pop();
             }
-            ans[i] = !st.isEmpty() ? st.peek() : n;
-            st.push(i);
-        }
-        return ans;
-    }
-    private int[] getPGEE(int[] arr) {
-        int n = arr.length;
-        int[] ans = new int[n];
-        Stack<Integer> st = new Stack<>();
-        for (int i = 0; i < n; i++) {
-            while (!st.isEmpty() && arr[st.peek()] < arr[i]) {
-                st.pop();
-            }
-            ans[i] = !st.isEmpty() ? st.peek() : -1;
+            ans[i] = st.isEmpty() ? n : st.peek();
             st.push(i);
         }
         return ans;
     }
 
-    private long subArrayMin(int[] arr) {
+    private int[] getPGEE(int[] arr) {
         int n = arr.length;
-        int[] nse = getNSE(arr);
-        int[] psee = getPSEE(arr);
-        long sum = 0;
+        int[] ans = new int[n];
+        Stack<Integer> st = new Stack<>();
+
         for (int i = 0; i < n; i++) {
-            int left = i - psee[i];
-            int right = nse[i] - i;
-            long freq = 1L * left * right;
-            sum += freq * arr[i];
+            while (!st.isEmpty() && arr[st.peek()] < arr[i]) {
+                st.pop();
+            }
+            ans[i] = st.isEmpty() ? -1 : st.peek();
+            st.push(i);
         }
-        return sum;
+        return ans;
     }
+
     private int[] getNSE(int[] arr) {
-         int n = arr.length;
+     int n = arr.length;
         int[] ans = new int[n];
         Stack<Integer> st = new Stack<>();
         for (int i = n - 1; i >= 0; i--) {
             while (!st.isEmpty() && arr[st.peek()] >= arr[i]) {
                 st.pop();
             }
-            ans[i] = !st.isEmpty() ? st.peek() : n;
+            ans[i] = st.isEmpty() ? n : st.peek();
             st.push(i);
         }
         return ans;
     }
+
     private int[] getPSEE(int[] arr) {
-         int n = arr.length;
+     int n = arr.length;
         int[] ans = new int[n];
         Stack<Integer> st = new Stack<>();
+
         for (int i = 0; i < n; i++) {
             while (!st.isEmpty() && arr[st.peek()] > arr[i]) {
                 st.pop();
             }
-            ans[i] = !st.isEmpty() ? st.peek() : -1;
+            ans[i] = st.isEmpty() ? -1 : st.peek();
             st.push(i);
         }
         return ans;
