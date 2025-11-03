@@ -54,20 +54,13 @@ class Solution {
         int[] ans = new int[n];
         Stack<Integer> st = new Stack<>();
 
-        // Traverse array from left to right
-        for (int i = 0; i < n; i++) {
-            // Pop elements greater than current
-            while (!st.isEmpty() && arr[st.peek()] > arr[i]) {
-                st.pop();
+        for(int i = arr.length - 1;i >= 0; i --) {
+            while(!st.isEmpty() && arr[st.peek()] >= arr[i]) {
+                ans[st.pop()] = i;
             }
-
-            // If stack is empty, PSEE doesn't exist → set to -1
-            ans[i] = !st.isEmpty() ? st.peek() : -1;
-
-            // Push current index to stack
             st.push(i);
         }
-
+        while(!st.isEmpty()) ans[st.pop()] = -1;
         // Return PSEE indices
         return ans;
     }
