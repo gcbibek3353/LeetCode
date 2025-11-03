@@ -37,19 +37,13 @@ class Solution {
         int[] ans = new int[n];
         Stack<Integer> st = new Stack<>();
 
-        // Traverse array from right to left
-        for (int i = n - 1; i >= 0; i--) {
-            // Pop elements that are greater or equal to current
-            while (!st.isEmpty() && arr[st.peek()] >= arr[i]) {
-                st.pop();
+        for(int i = 0; i < arr.length; i ++) {
+            while(!st.isEmpty() && arr[st.peek()] > arr[i]){
+                ans[st.pop()] = i;
             }
-
-            // If stack is empty, NSE doesn't exist → set to n
-            ans[i] = !st.isEmpty() ? st.peek() : n;
-
-            // Push current index to stack
             st.push(i);
         }
+        while(!st.isEmpty()) ans[st.pop()] = n;
 
         // Return NSE indices
         return ans;
