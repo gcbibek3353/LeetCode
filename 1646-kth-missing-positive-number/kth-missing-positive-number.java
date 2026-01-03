@@ -4,14 +4,16 @@ class Solution {
         int r = arr.length - 1;
         while(l <= r) {
             int m = l + (r - l) / 2;
-            int missing = findNoOfMissingElements(arr , m);
+            int missing = getNumberOfMissing(arr , m);
             if(missing < k) l = m + 1;
-            else r = m - 1;
+            else {
+                r = m - 1;
+            }
         }
         if(r == -1) return k;
-        return arr[r] + k - findNoOfMissingElements(arr , r);
+        else return arr[r] + k - getNumberOfMissing(arr , r);
     }
-    private int findNoOfMissingElements(int[] arr , int i) {
-        return arr[i] - (i + 1);
+    private int getNumberOfMissing(int[] arr , int i ) {
+        return arr[i] - i - 1;
     }
 }
