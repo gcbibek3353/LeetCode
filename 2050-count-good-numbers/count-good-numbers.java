@@ -1,29 +1,25 @@
 class Solution {
-    static final long MOD = 1000000007;
+    static final int MOD = 1_000_000_007;
 
     public int countGoodNumbers(long n) {
-        long evenPositions = (n + 1) / 2; // ceil(n/2)
-        long oddPositions = n / 2;        // floor(n/2)
+        long even = (n + 1) / 2;
+        long odd = n / 2;
 
-        long part1 = modPow(5, evenPositions, MOD);
-        long part2 = modPow(4, oddPositions, MOD);
-
-        return (int)((part1 * part2) % MOD);
+        long result = powMod(5, even) * powMod(4, odd) % MOD;
+        return (int) result;
     }
 
-    // Fast modular exponentiation
-    private long modPow(long base, long exp, long mod) {
+    private long powMod(long base, long exp) {
         long result = 1;
-        base %= mod;
+        base %= MOD;
 
         while (exp > 0) {
-            if ((exp & 1) == 1) { // if exp is odd
-                result = (result * base) % mod;
+            if ((exp & 1) == 1) {
+                result = (result * base) % MOD;
             }
-            base = (base * base) % mod;
-            exp >>= 1; // divide exp by 2
+            base = (base * base) % MOD;
+            exp >>= 1;
         }
-
         return result;
     }
 }
