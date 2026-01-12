@@ -10,7 +10,7 @@ class Solution {
             out.add(new ArrayList<>(temp));
             return;
         }
-        if((n-start+1)<(k-temp.size()))return;
+        // if((n-start+1)<(k-temp.size()))return;
         for(int i=start;i<=n;i++){
             temp.add(i);
             helper(i+1, n, k);
