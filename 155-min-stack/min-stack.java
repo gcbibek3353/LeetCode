@@ -1,32 +1,30 @@
 class MinStack {
-    List<int[]> list;
+    ArrayDeque<int[]> primaryStack;
 
     public MinStack() {
-        list = new ArrayList<>();
+        this.primaryStack = new ArrayDeque<>();
     }
-
+    
     public void push(int val) {
-        if (list.isEmpty()) {
-            int[] elm = new int[] { val, val };
-            list.add(elm);
-        } else {
-            int[] elm = list.get(list.size() - 1);
-            int min = Math.min(val, elm[1]);
-            int[] elm1 = new int[] { val, min };
-            list.add(elm1);
+        int minValue = val;
+        if(!primaryStack.isEmpty()){
+            int[] topElm = primaryStack.peek();
+            minValue = Math.min(minValue , topElm[1]);
         }
+        int[] curElm = new int[]{val,minValue};
+        primaryStack.push(curElm);
     }
-
+    
     public void pop() {
-        list.remove(list.size() - 1);
+        if(!primaryStack.isEmpty()) primaryStack.pop();
     }
-
+    
     public int top() {
-        return list.isEmpty() ? -1 :list.get(list.size() - 1)[0];
+        return primaryStack.peek()[0];
     }
-
+    
     public int getMin() {
-        return list.isEmpty() ? -1 :list.get(list.size() - 1)[1];
+        return primaryStack.peek()[1];
     }
 }
 
