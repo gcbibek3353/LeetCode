@@ -18,12 +18,12 @@ class Solution {
         return isMirror(root.left , root.right);
     }
 
-    private boolean isMirror(TreeNode leftNode , TreeNode rightNode) {
-        if(leftNode == null && rightNode == null) return true;
-        if(leftNode == null || rightNode == null) return false;
-        boolean cond1 = isMirror(leftNode.left , rightNode.right);
-        boolean cond2 = isMirror(leftNode.right , rightNode.left);
-        boolean cond3 = leftNode.val == rightNode.val;
-        return (cond1 && cond2 && cond3);
+    private boolean isMirror(TreeNode leftChild , TreeNode rightChild) {
+        if(leftChild == null && rightChild == null) return true;
+        if(leftChild == null || rightChild == null) return false;
+        boolean condition1 = leftChild.val == rightChild.val;
+        boolean condition2 = isMirror(leftChild.left , rightChild.right);
+        boolean condition3 = isMirror(leftChild.right , rightChild.left);
+        return condition1 && (condition2 && condition3);
     }
 }
