@@ -1,55 +1,84 @@
 class Solution {
-    public void solve(char[][] board) {
-        int m = board.length;
-        int n = board[0].length;
-        // visited matrix to mark all 'O's connected to the boundary
-        boolean[][] vis = new boolean[m][n];
+    static class coords {
+        int i;
+        int j;
 
-        // 1. DFS from first/last columns
-        for(int i =0;i<m;i++){
-            if(board[i][0] == 'O' && vis[i][0] == false){
-                dfs(i,0,board,vis);
-            }
-            if(board[i][n-1] == 'O' && vis[i][n-1] == false){
-                dfs(i,n-1,board,vis);
-            }
+        coords(int i, int j) {
+            this.i = i;
+            this.j = j;
         }
-        // 2. DFS from first/last rows
-        for(int j = 0;j<n;j++){
-            if(board[0][j] == 'O' && vis[0][j] == false){
-                dfs(0,j,board,vis);
+    }
+
+    public void solve(char[][] grid) {
+        int r = grid.length;
+        int c = grid[0].length;
+
+        boolean[][] isSurrounded = new boolean[r][c];
+        boolean[][] visited = new boolean[r][c];
+
+          for(int i = 0; i < r; i ++){
+            boolean[] curRow = new boolean[c];
+            boolean[] surroundedCurRow = new boolean[c]; 
+            for(int j = 0; j < c; j ++){
+                curRow[j] = false;
+                surroundedCurRow[j] = false;
             }
-            if(board[m-1][j] == 'O' && vis[m-1][j] == false){
-                dfs(m-1,j,board,vis);
-            }
+            visited[i] = curRow;
+            isSurrounded[i] = surroundedCurRow;
         }
 
-        // 3. Flip surrounded 'O's
-        for(int i =0;i<m;i++){
-            for(int j =0;j<n;j++){
-                // Flip 'O' if it's not marked as visited (i.e., not connected to border)
-                if(board[i][j] == 'O' && vis[i][j] == false){
-                    board[i][j] = 'X';
+        for (int i = 0; i < c; i++) {
+            char curChar = grid[0][i];
+            if (curChar == 'O' && !visited[0][i])
+                bfs(grid, isSurrounded, visited, 0, i);
+        }
+        for (int i = 1; i < r; i++) {
+            char curChar = grid[i][c - 1];
+            if (curChar == 'O' && !visited[i][c - 1])
+                bfs(grid, isSurrounded, visited, i, c - 1);
+        }
+        for (int i = c - 2; i >= 0; i--) {
+            char curChar = grid[r - 1][i];
+            if (curChar == 'O' && !visited[r - 1][i])
+                bfs(grid, isSurrounded, visited, r - 1, i);
+        }
+        for (int i = r - 2; i >= 1; i--) {
+            char curChar = grid[i][0];
+            if (curChar == 'O' && !visited[i][0])
+                bfs(grid, isSurrounded, visited, i, 0);
+        }
+
+        for(int i = 0; i < r; i ++){
+            for(int j = 0; j < c; j ++){
+                if(isSurrounded[i][j]){
+                    grid[i][j] = 'O';
+                } 
+                else{
+                    grid[i][j] = 'X';     
                 }
             }
         }
     }
-    
-    public void dfs(int i, int j, char[][] board, boolean[][] vis){
-        int m = board.length;
-        int n = board[0].length;
 
-        // Base case: out of bounds, already visited, or 'X'
-        if(i<0 || j<0 || i>=m || j>=n || vis[i][j] == true || board[i][j] == 'X'){
-            return;
+    private void bfs(char[][] grid, boolean[][] isSurrounded, boolean[][] visited, int i, int j) {
+        Queue<coords> q = new LinkedList<>();
+        q.offer(new coords(i, j));
+        visited[i][j] = true;
+        isSurrounded[i][j] = true;
+        int[][] directions = { { 1, 0 }, { -1, 0 }, { 0, 1 }, { 0, -1 } };
+
+         while(!q.isEmpty()) {
+            coords curCoords = q.poll();
+            for(int[] direction : directions){
+                int curRow = curCoords.i + direction[0];
+                int curCol = curCoords.j + direction[1];
+                if(curRow < 0 || curRow >= grid.length || curCol < 0 || curCol >= grid[0].length) continue;
+                if(grid[curRow][curCol] == 'O' && !visited[curRow][curCol]){
+                    q.offer(new coords(curRow,curCol));
+                    visited[curRow][curCol] = true;
+                    isSurrounded[curRow][curCol] = true;
+                }
+            }
         }
-        
-        vis[i][j] = true;
-
-        // DFS in all 4 directions
-        dfs(i+1,j,board,vis);
-        dfs(i,j+1,board,vis);
-        dfs(i-1,j,board,vis);
-        dfs(i,j-1,board,vis);
     }
 }
