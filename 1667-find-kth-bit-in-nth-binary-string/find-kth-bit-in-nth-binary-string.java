@@ -1,26 +1,16 @@
 class Solution {
     public char findKthBit(int n, int k) {
-        String binaryStr = findString(n);
-        return binaryStr.charAt(k - 1);
-    }
-    private String findString(int n){
-        if(n == 0) return "0";
-        String prevString = findString(n - 1);
-        return prevString + "1" + reverse(invert(prevString));
-    }
-    private String reverse(String str){
-        StringBuilder newString = new StringBuilder();
-        for(int i = str.length() - 1; i >= 0; i --){
-            newString.append(str.charAt(i));
-        }
-        return newString.toString();
-    }
-    private String invert(String str){
-        StringBuilder newString = new StringBuilder();
-        for(int i = 0; i < str.length(); i ++){
-            if(str.charAt(i) == '0') newString.append('1');
-            else newString.append('0');
-        }
-        return newString.toString();
+        if (n == 1) return '0';
+
+        int len = (1 << n) - 1;
+        int mid = (len / 2) + 1;
+
+        if (k == mid) return '1';
+
+        if (k < mid) 
+            return findKthBit(n - 1, k);
+
+        char c = findKthBit(n - 1, len - k + 1);
+        return c == '0' ? '1' : '0';
     }
 }
