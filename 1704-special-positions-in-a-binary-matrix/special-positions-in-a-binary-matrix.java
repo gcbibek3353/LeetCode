@@ -1,30 +1,27 @@
 class Solution {
     public int numSpecial(int[][] mat) {
-        int m = mat.length;
-        int n = mat[0].length;
-        int[] rowCount = new int[m];
-        int[] colCount = new int[n];
-        
-        for (int row = 0; row < m; row++) {
-            for (int col = 0; col < n; col++) {
-                if (mat[row][col] == 1) {
-                    rowCount[row]++;
-                    colCount[col]++;
+        int r = mat.length;
+        int c = mat[0].length;
+        int[] rowCount = new int[r];
+        int[] colCount = new int[c];
+        int specialPositionCount = 0;
+
+        for(int i = 0; i < r; i ++){
+            for(int j = 0; j < c; j ++) {
+                if(mat[i][j] == 1){
+                    rowCount[i] ++;
+                    colCount[j] ++;
                 }
             }
         }
-        
-        int ans = 0;
-        for (int row = 0; row < m; row++) {
-            for (int col = 0; col < n; col++) {
-                if (mat[row][col] == 1) {
-                    if (rowCount[row] == 1 && colCount[col] == 1) {
-                        ans++;
-                    }
+
+        for(int i = 0; i < r; i ++){
+            for(int j = 0; j < c; j ++) {
+                if(rowCount[i] == 1 && colCount[j] == 1 && mat[i][j] == 1){
+                    specialPositionCount ++;
                 }
             }
         }
-        
-        return ans;
+        return specialPositionCount;
     }
 }
