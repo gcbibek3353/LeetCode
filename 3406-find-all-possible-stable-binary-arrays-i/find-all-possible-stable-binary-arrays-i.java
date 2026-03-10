@@ -1,31 +1,42 @@
 class Solution {
-    Integer[][][] dp;
-    int MOD = 1_000_000_007;
+
+    static final int MOD = 1000000007;
+    int[][][] memo;
+    int limit;
+
     public int numberOfStableArrays(int zero, int one, int limit) {
-        dp = new Integer[zero + 1][one + 1][2];
-        int startingWithZero = count(zero , one , false,limit);
-        int startingWithOne = count(zero , one , true , limit);
-        return (startingWithZero + startingWithOne) % MOD;
+        this.memo = new int[zero + 1][one + 1][2];
+        for (int i = 0; i <= zero; i++) {
+            for (int j = 0; j <= one; j++) {
+                Arrays.fill(memo[i][j], -1);
+            }
+        }
+        this.limit = limit;
+        return (dp(zero, one, 0) + dp(zero, one, 1)) % MOD;
     }
 
-    private int count(int zeroLeft , int oneLeft , boolean onesTurn , int limit) {
-        if(zeroLeft == 0 && oneLeft == 0) return 1;
-        int correspondingDigit = onesTurn ? 1 : 0;
-        if(dp[zeroLeft][oneLeft][correspondingDigit] != null) return dp[zeroLeft][oneLeft][correspondingDigit];
+    public int dp(int zero, int one, int lastBit) {
+        if (zero == 0) {
+            return (lastBit == 0 || one > limit) ? 0 : 1;
+        } else if (one == 0) {
+            return (lastBit == 1 || zero > limit) ? 0 : 1;
+        }
 
-        long result = 0;
-        if(onesTurn){
-            for(int i = 1; i <= Math.min(limit , oneLeft); i ++){   
-                result += count(zeroLeft , oneLeft - i , false , limit);
+        if (memo[zero][one][lastBit] == -1) {
+            int res = 0;
+            if (lastBit == 0) {
+                res = (dp(zero - 1, one, 0) + dp(zero - 1, one, 1)) % MOD;
+                if (zero > limit) {
+                    res = (res - dp(zero - limit - 1, one, 1) + MOD) % MOD;
+                }
+            } else {
+                res = (dp(zero, one - 1, 0) + dp(zero, one - 1, 1)) % MOD;
+                if (one > limit) {
+                    res = (res - dp(zero, one - limit - 1, 0) + MOD) % MOD;
+                }
             }
+            memo[zero][one][lastBit] = res % MOD;
         }
-        else {
-            for(int i = 1; i <= Math.min(limit , zeroLeft); i ++){   
-                result += count(zeroLeft - i , oneLeft , true , limit);
-            }
-        }
-        result = result % MOD;
-        dp[zeroLeft][oneLeft][correspondingDigit] = (int)result;
-        return dp[zeroLeft][oneLeft][correspondingDigit];
+        return memo[zero][one][lastBit];
     }
 }
