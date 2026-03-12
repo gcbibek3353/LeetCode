@@ -1,21 +1,33 @@
 class Solution {
     public int numSubarraysWithSum(int[] nums, int goal) {
-        return numSubarrayLesserOrEqualto(nums, goal) - numSubarrayLesserOrEqualto(nums, goal - 1);
-    }
-   
-    private int numSubarrayLesserOrEqualto(int[] nums, int goal) {
-        int result = 0;
-        int l = 0;
-        int sum = 0;
-        for(int r = 0; r < nums.length; r ++) {
-            sum += nums[r];
-            while(sum > goal && l <= r){
-                sum -= nums[l];
-                l ++;
-            }
-            result += r - l + 1;
-        }
-        return result;
-    }
+        int start = 0;
+        int prefixZeros = 0;
+        int currentSum = 0;
+        int totalCount = 0;
 
+        // Loop through the array using end pointer
+        for (int end = 0; end < nums.length; end++) {
+            // Add current element to the sum
+            currentSum += nums[end];
+            
+            // Slide the window while condition is met
+            while (start < end && (nums[start] == 0 || currentSum > goal)) {
+                if (nums[start] == 1) {
+                    prefixZeros = 0;
+                } else {
+                    prefixZeros++;
+                }
+                
+                currentSum -= nums[start];
+                start++;
+            }
+            
+            // Count subarrays when window sum matches the goal
+            if (currentSum == goal) {
+                totalCount += 1 + prefixZeros;
+            }
+        }
+        
+        return totalCount;
+    }
 }
