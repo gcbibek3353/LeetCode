@@ -1,36 +1,30 @@
 class Solution {
-
-    private static final double EPS = 1e-7;
-
     public long minNumberOfSeconds(int mountainHeight, int[] workerTimes) {
-        int maxWorkerTimes = 0;
-        for (int t : workerTimes) {
-            maxWorkerTimes = Math.max(maxWorkerTimes, t);
-        }
-
         long l = 1;
-        long r =
-            ((long) maxWorkerTimes * mountainHeight * (mountainHeight + 1)) / 2;
-        long ans = 0;
+        long r = 0;
+        long ans = -1;
+        int slowestWorkerTime = 0;
+        for(int workTime : workerTimes){
+            slowestWorkerTime = Math.max(slowestWorkerTime , workTime);
+        }
+        r = (long)slowestWorkerTime * (mountainHeight * (long)(mountainHeight + 1)) / 2;
 
-        while (l <= r) {
-            long mid = (l + r) / 2;
-            long cnt = 0;
-            for (int t : workerTimes) {
-                long work = mid / t;
-                // find the largest k such that 1+2+...+k <= work
-                long k = (long) ((-1.0 + Math.sqrt(1 + work * 8)) / 2 + EPS);
-                cnt += k;
+        while(l <= r){
+            long mid = l + (r - l) / 2;
+
+            long reducedMountainCount = 0;
+            for(int curWorkerTime : workerTimes) {
+                long heightReducedByCurrentWorker = (long)(-1.0 + Math.sqrt(1 + 8.0 * (mid / curWorkerTime))) / 2;
+                reducedMountainCount += heightReducedByCurrentWorker;
             }
-
-            if (cnt >= mountainHeight) {
+            if(reducedMountainCount >= mountainHeight){
                 ans = mid;
                 r = mid - 1;
-            } else {
+            }
+            else {
                 l = mid + 1;
             }
         }
-
         return ans;
     }
 }
