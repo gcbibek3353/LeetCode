@@ -2,88 +2,86 @@ import java.util.*;
 
 class Twitter {
 
-    static class User {
-        int id;
-        Set<Integer> followers;
-        Set<Integer> following;
-        List<Integer> tweets;
+    private static int timeStamp = 0;
 
-        User(int id) {
+    class Tweet {
+        int id;
+        int time;
+        Tweet next;
+
+        Tweet(int id) {
             this.id = id;
-            followers = new HashSet<>();
-            following = new HashSet<>();
-            tweets = new ArrayList<>();
+            this.time = timeStamp++;
+            this.next = null;
         }
     }
 
-    static class Tweet {
-        int id;
-        int userId;
+    // userId -> head of tweet list
+    Map<Integer, Tweet> tweetMap;
 
-        Tweet(int id, int userId) {
-            this.id = id;
-            this.userId = userId;
-        }
-    }
-
-    Map<Integer, User> users;
-    List<Tweet> tweets;
+    // userId -> set of followees
+    Map<Integer, Set<Integer>> followMap;
 
     public Twitter() {
-        users = new HashMap<>();
-        tweets = new ArrayList<>();
-    }
-
-    private User getUser(int id) {
-        if (!users.containsKey(id)) {
-            users.put(id, new User(id));
-        }
-        return users.get(id);
+        tweetMap = new HashMap<>();
+        followMap = new HashMap<>();
     }
 
     public void postTweet(int userId, int tweetId) {
-        User user = getUser(userId);
+        Tweet newTweet = new Tweet(tweetId);
 
-        Tweet tweet = new Tweet(tweetId, userId);
-        tweets.add(tweet);
-
-        user.tweets.add(tweetId);
+        // insert at head (like stack)
+        newTweet.next = tweetMap.get(userId);
+        tweetMap.put(userId, newTweet);
     }
 
     public List<Integer> getNewsFeed(int userId) {
-        List<Integer> result = new ArrayList<>();
-        User user = getUser(userId);
+        List<Integer> res = new ArrayList<>();
 
-        Set<Integer> following = user.following;
+        if (!followMap.containsKey(userId)) {
+            followMap.put(userId, new HashSet<>());
+        }
 
-        for (int i = tweets.size() - 1; i >= 0 && result.size() < 10; i--) {
-            Tweet t = tweets.get(i);
+        // user should follow themselves
+        followMap.get(userId).add(userId);
 
-            if (t.userId == userId || following.contains(t.userId)) {
-                result.add(t.id);
+        Set<Integer> followees = followMap.get(userId);
+
+        // max heap based on tweet time
+        PriorityQueue<Tweet> maxHeap =
+            new PriorityQueue<>((a, b) -> b.time - a.time);
+
+        // add most recent tweet of each followee
+        for (int followeeId : followees) {
+            Tweet t = tweetMap.get(followeeId);
+            if (t != null) {
+                maxHeap.offer(t);
             }
         }
 
-        return result;
+        // extract top 10 tweets
+        while (!maxHeap.isEmpty() && res.size() < 10) {
+            Tweet curr = maxHeap.poll();
+            res.add(curr.id);
+
+            // push next tweet from same user
+            if (curr.next != null) {
+                maxHeap.offer(curr.next);
+            }
+        }
+
+        return res;
     }
 
     public void follow(int followerId, int followeeId) {
-        User follower = getUser(followerId);
-        User followee = getUser(followeeId);
-
-        follower.following.add(followeeId);
-        followee.followers.add(followerId);
+        followMap
+            .computeIfAbsent(followerId, k -> new HashSet<>())
+            .add(followeeId);
     }
 
     public void unfollow(int followerId, int followeeId) {
-        if (!users.containsKey(followerId) || !users.containsKey(followeeId)) {
-            return;
+        if (followMap.containsKey(followerId) && followeeId != followerId) {
+            followMap.get(followerId).remove(followeeId);
         }
-
-        User follower = users.get(followerId);
-        User followee = users.get(followeeId);
-
-        follower.following.remove(followeeId);
-        followee.followers.remove(followerId);
     }
 }
