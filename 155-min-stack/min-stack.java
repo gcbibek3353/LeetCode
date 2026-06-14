@@ -1,37 +1,47 @@
 class MinStack {
-    ArrayDeque<int[]> primaryStack;
+
+    class Node{
+        int value;
+        int minTillNow;
+        public Node(int val , int min){
+            value = val;
+            minTillNow = min;
+        }
+    }
+    List<Node> ds;
 
     public MinStack() {
-        this.primaryStack = new ArrayDeque<>();
+        ds = new ArrayList<>();
     }
     
-    public void push(int val) {
-        int minValue = val;
-        if(!primaryStack.isEmpty()){
-            int[] topElm = primaryStack.peek();
-            minValue = Math.min(minValue , topElm[1]);
+    public void push(int value) {
+        int min = value;
+        if(ds.size() > 0){
+            Node lastNode = ds.get(ds.size() - 1);
+            min = lastNode.minTillNow;
         }
-        int[] curElm = new int[]{val,minValue};
-        primaryStack.push(curElm);
+        min = Math.min(min , value);
+        Node newNode = new Node(value , min);
+        ds.add(newNode); 
     }
     
     public void pop() {
-        if(!primaryStack.isEmpty()) primaryStack.pop();
+        ds.remove(ds.size() - 1);
     }
     
     public int top() {
-        return primaryStack.peek()[0];
+        return ds.get(ds.size() - 1).value;
     }
     
     public int getMin() {
-        return primaryStack.peek()[1];
+        return ds.get(ds.size() - 1).minTillNow;
     }
 }
 
 /**
  * Your MinStack object will be instantiated and called as such:
  * MinStack obj = new MinStack();
- * obj.push(val);
+ * obj.push(value);
  * obj.pop();
  * int param_3 = obj.top();
  * int param_4 = obj.getMin();
