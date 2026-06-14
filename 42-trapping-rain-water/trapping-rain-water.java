@@ -1,22 +1,23 @@
 class Solution {
     public int trap(int[] height) {
-        int n = height.length;
-        int sum = 0;
-        int[] leftMax = new int[n];
-        int[] rightMax = new int[n];
-        for(int i = 0; i < n; i ++){
-            if(i == 0) leftMax[i] = height[i];
-            else leftMax[i] = Math.max(leftMax[i - 1],height[i]);
+        int left = 0;
+        int right = height.length - 1;
+        int leftBoundary = height[left];
+        int rightBoundary = height[right];
+        int totalWaterCount = 0;
+        while(left < right){
+            leftBoundary = Math.max(leftBoundary , height[left]);
+            rightBoundary = Math.max(rightBoundary , height[right]);
+            // System.out.printf("%d , %d , %d , %d \n", left , right , leftBoundary , rightBoundary);
+            if(leftBoundary <= rightBoundary){
+                totalWaterCount += Math.min(leftBoundary , rightBoundary) - height[left];
+                left ++;
+            }
+            else{
+                totalWaterCount += Math.min(leftBoundary , rightBoundary) - height[right];
+                right --; 
+            }
         }
-        for(int i = n - 1; i >= 0; i --) {
-            if( i == n - 1) rightMax[i] = height[i];
-            else rightMax[i] = Math.max(rightMax[i + 1] , height[i]);
-        }
-
-        for(int i = 0; i < n; i ++){
-            int min = Math.min(leftMax[i],rightMax[i]);
-            if(height[i] < min) sum += min - height[i];
-        }
-        return sum;
+        return totalWaterCount;
     }
 }
