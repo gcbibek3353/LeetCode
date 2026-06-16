@@ -3,30 +3,21 @@ class Solution {
         Deque<Integer> stack = new ArrayDeque<>();
         int[] ans = new int[temperatures.length];
 
-        for (int i = 0; i < temperatures.length; i++) {
-            if (i == 0) {
-                stack.push(i);
-                continue;
-            }
-
-            while (stack.size() > 0) {
+        for(int i = 0; i < temperatures.length; i ++) {
+            while(stack.size() > 0){
                 int topElmIndex = stack.peek();
-
-                if (temperatures[i] > temperatures[topElmIndex]) {
-                    stack.pop();
+                if(temperatures[topElmIndex] < temperatures[i]){
                     ans[topElmIndex] = i - topElmIndex;
-                } else {
-                    break;
+                    stack.pop();
                 }
+                else break;
             }
-
             stack.push(i);
         }
-
-        while (stack.size() > 0) {
-            ans[stack.pop()] = 0;
+        while(stack.size() > 0){
+            int topElmIndex = stack.pop();
+            ans[topElmIndex] = 0;
         }
-
         return ans;
     }
 }
