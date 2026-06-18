@@ -10,27 +10,32 @@
  */
 class Solution {
     public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
-        ListNode head = new ListNode();
-        ListNode curNode = head;
         int carry = 0;
-        while(l1 != null || l2 != null) {
-            int l1Val = (l1 != null) ? l1.val : 0;
-            int l2Val = (l2 != null) ? l2.val : 0;
-            int sum = l1Val + l2Val + carry;
-            int val = sum % 10;
-            carry = sum / 10;
-            ListNode newNode = new ListNode();
-            newNode.val = val;
-            curNode.next = newNode;
-            curNode = curNode.next;
-            if(l1 != null) l1 = l1.next;
-            if(l2 != null) l2 = l2.next;
+        ListNode head = null;
+        ListNode curHead = null;
+        while(l1 != null || l2 != null || carry > 0) {
+            int digit1 = (l1 != null) ? l1.val : 0;
+            int digit2 = (l2 != null) ? l2.val : 0;
+            int curSum = digit1 + digit2 + carry;
+            carry = 0;
+            l1 = (l1 == null) ? l1 : l1.next;
+            l2 = (l2 == null) ? l2 : l2.next;
+            int curDigit = curSum;
+            if(curSum >= 10){
+                carry = curSum / 10;
+                curDigit = curSum % 10;
+            }
+            System.out.printf("curDigit : %d", curDigit);
+            ListNode newNode = new ListNode(curDigit);
+            if(curHead == null) {
+                head = newNode;
+                curHead = head;
+            }
+            else {
+                curHead.next = newNode;
+                curHead = curHead.next;
+            }
         }
-        if(carry != 0){
-            ListNode newNode = new ListNode();
-            newNode.val = carry;
-            curNode.next = newNode;
-        }
-        return head.next;
+        return head;
     }
 }
