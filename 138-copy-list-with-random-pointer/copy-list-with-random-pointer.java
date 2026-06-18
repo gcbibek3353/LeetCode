@@ -16,20 +16,23 @@ class Node {
 class Solution {
     public Node copyRandomList(Node head) {
         Map<Node , Node> mp = new HashMap<>();
-        Node curHead = head;
-        while(curHead != null){
-            Node newNode = new Node(curHead.val);
-            mp.put(curHead,newNode);
-            curHead = curHead.next;
+        Node curNode = head;
+        while(curNode != null) {
+            Node newNode = new Node(curNode.val);
+            mp.put(curNode , newNode);
+            curNode = curNode.next;
         }
-        curHead = head;
-        while(curHead != null){
-            Node curNode = mp.get(curHead);
-            if(curHead.next == null) curNode.next = null;
-            else curNode.next = mp.get(curHead.next);
-            curNode.random = mp.get(curHead.random);
-            curHead = curHead.next;
+
+        curNode = head;
+        while(curNode != null) {
+            Node newNextNode = mp.get(curNode.next);
+            Node randomNextNode = mp.get(curNode.random);
+            Node nextNode = mp.get(curNode);
+            nextNode.next = newNextNode;
+            nextNode.random = randomNextNode;
+            curNode = curNode.next;
         }
+
         return mp.get(head);
     }
 }
