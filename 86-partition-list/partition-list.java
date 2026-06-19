@@ -10,24 +10,38 @@
  */
 class Solution {
     public ListNode partition(ListNode head, int x) {
-        ListNode lesserNodeHead = new ListNode();
-        ListNode lessercurNode = lesserNodeHead;
-        ListNode greaterNodeHead = new ListNode();
-        ListNode greatercurNode = greaterNodeHead;
+        if(head == null || head.next == null) return head;
+        ListNode lesserHead = null;
+        ListNode curLesserNode = null;
+        ListNode greaterHead = null;
+        ListNode curGreaterNode = null;
         ListNode curNode = head;
-        while(curNode != null){
-            if(curNode.val < x){
-                lessercurNode.next = curNode;
-                lessercurNode = curNode;
+        while(curNode != null) {
+            if(curNode.val < x) {
+                if(curLesserNode == null) {
+                    lesserHead = curNode;
+                    curLesserNode = lesserHead;
+                }
+                else {
+                    curLesserNode.next = curNode;
+                    curLesserNode = curLesserNode.next;
+                }
             }
-            else{
-               greatercurNode.next = curNode;
-                greatercurNode = curNode;  
+            else {
+                if(curGreaterNode == null) {
+                    greaterHead = curNode;
+                    curGreaterNode = greaterHead;
+                }
+                else {
+                    curGreaterNode.next = curNode;
+                    curGreaterNode = curGreaterNode.next;
+                }
             }
             curNode = curNode.next;
         }
-        greatercurNode.next = null;
-        lessercurNode.next = greaterNodeHead.next;
-        return lesserNodeHead.next;
+        if(curLesserNode != null) curLesserNode.next = greaterHead;
+        else return greaterHead;
+        if(curGreaterNode != null ) curGreaterNode.next = null;
+        return lesserHead;
     }
 }
