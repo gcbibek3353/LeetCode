@@ -4,16 +4,19 @@ class Solution {
         int l = 0;
         int maxFreq = 0;
         int ans = 0;
-        for(int r = 0; r < s.length(); r ++){
+        for(int r = 0; r < s.length(); r ++) {
             char curChar = s.charAt(r);
-            freq[curChar - 'A'] ++;
+            freq[curChar - 'A'] += 1;
             maxFreq = Math.max(maxFreq , freq[curChar - 'A']);
-            while((r - l + 1) - maxFreq > k){
+
+            while((r - l + 1) - maxFreq > k) {
                 freq[s.charAt(l) - 'A'] --;
                 l ++;
             }
+
             ans = Math.max(ans , r - l + 1);
         }
+
         return ans;
     }
 }
