@@ -19,8 +19,7 @@ class Solution {
         inOrderTraversal(root);
         return list.get(k - 1);
     }
-
-    private void inOrderTraversal(TreeNode root){
+    private void inOrderTraversal(TreeNode root) {
         if(root == null) return;
         if(root.left != null) inOrderTraversal(root.left);
         list.add(root.val);
