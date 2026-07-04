@@ -15,21 +15,17 @@
  */
 class Solution {
     public TreeNode buildTree(int[] preorder, int[] inorder) {
-        if(preorder.length == 0 || inorder.length == 0) return null;
+        if(preorder.length == 0 && inorder.length == 0) return null;
 
         TreeNode root = new TreeNode(preorder[0]);
-        int mid = findIndex(inorder , root.val);
-        root.left = buildTree(Arrays.copyOfRange(preorder , 1 , mid + 1) , Arrays.copyOfRange(inorder, 0 , mid));
-        root.right = buildTree(Arrays.copyOfRange(preorder,mid + 1,preorder.length) , Arrays.copyOfRange(inorder , mid + 1 , inorder.length));
+        int indexOfRoot = findIndex(inorder , root.val);
+        root.left = buildTree(Arrays.copyOfRange(preorder , 1 , indexOfRoot + 1) , Arrays.copyOfRange(inorder , 0 , indexOfRoot));
+        root.right = buildTree(Arrays.copyOfRange(preorder , indexOfRoot + 1 , preorder.length), Arrays.copyOfRange(inorder , indexOfRoot + 1 , inorder.length));
         return root;
     }
-
-    public static int findIndex(int[] arr, int target) {
-    for (int i = 0; i < arr.length; i++) {
-        if (arr[i] == target) {
-            return i; // Return the index if the element is found
-        }
+    private int findIndex(int[] arr , int target){
+        int ans = -1;
+        for(int i = 0; i < arr.length; i ++) if(arr[i] == target) return i;
+        return ans;
     }
-    return -1; // Return -1 if the element is not found
-}
 }
