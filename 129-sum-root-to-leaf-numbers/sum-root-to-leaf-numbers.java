@@ -14,20 +14,19 @@
  * }
  */
 class Solution {
-       int sum = 0;
-
+    int ans;
     public int sumNumbers(TreeNode root) {
-        helper(root, 0);
-        return sum;
+        count(root , 0);
+        return ans;
     }
 
-    void helper(TreeNode node, int path) {
-        if (node == null) return;
-        path = path * 10 + node.val;
-        if (node.left == null && node.right == null) {
-            sum += path;
+    private void count(TreeNode root , int curDigit) {
+        if(root == null) return;
+        int curNum = curDigit * 10 + root.val;
+        if(root.left == null && root.right == null) ans += curNum;
+        else{
+            if(root.left != null) count(root.left , curNum);
+            if(root.right != null) count(root.right , curNum);
         }
-        helper(node.left, path);
-        helper(node.right, path);
     }
 }
