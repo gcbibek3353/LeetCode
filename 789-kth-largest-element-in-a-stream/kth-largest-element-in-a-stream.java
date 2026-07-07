@@ -1,31 +1,27 @@
 class KthLargest {
-    List<Integer> scores;
+    PriorityQueue<Integer> maxHeap;
+    PriorityQueue<Integer> minHeap;
     int k;
     public KthLargest(int k, int[] nums) {
-        this.scores = new ArrayList<>();
+        maxHeap = new PriorityQueue<>((a , b) -> b - a);
+        minHeap = new PriorityQueue<>((a , b) -> a - b);
         this.k = k;
-        for(int num : nums){
-            scores.add(num);
+        for(int i = 0; i < nums.length; i ++) {
+            minHeap.offer(nums[i]);
+            if(minHeap.size() > k) maxHeap.offer(minHeap.poll());
         }
-        Collections.sort(scores);
+        // System.out.println(maxHeap.peek());
     }
     
     public int add(int val) {
-        int index = findIndex( val);
-        scores.add(index , val);
-        return scores.get(scores.size() - k);
-    }
-
-    private int findIndex(int val) {
-        int l = 0;
-        int r = scores.size() - 1;
-        while(l <= r){
-            int m = l + (r - l) / 2;
-            if(scores.get(m) == val) return m;
-            else if(scores.get(m) < val) l = m + 1;
-            else r = m - 1;
+        if(minHeap.size() < k) minHeap.offer(val);
+        else if((minHeap.size() > 0 && val > minHeap.peek())){
+            maxHeap.offer(minHeap.poll());
+            minHeap.offer(val);
+            // System.out.printf("value : %d , minHeapMin :L %d \n", val , minHeap.peek());
         }
-        return l;
+        else maxHeap.offer(val);
+        return minHeap.peek();
     }
 }
 
