@@ -1,49 +1,43 @@
 class Solution {
-
-    class Task {
-        int freq;
-        int time;
-
-        Task(int freq, int time) {
-            this.freq = freq;
-            this.time = time;
-        }
-    }
-
     public int leastInterval(char[] tasks, int n) {
+        class Task{
+            int freq;
+            int waitTime;
+            public Task(int freq , int waitTime){
+                this.freq = freq;
+                this.waitTime = waitTime;
+            }
+        }
+        Queue<Integer> maxHeap = new PriorityQueue<>((a , b) -> b - a);
+        Queue<Task> waitingQueue = new LinkedList<>();
 
         int[] freq = new int[26];
-        for (char ch : tasks) {
-            freq[ch - 'A']++;
+        for(int i = 0; i < tasks.length; i ++){
+            int curCharIndex = tasks[i] - 'A';
+            freq[curCharIndex] += 1;
         }
 
-        PriorityQueue<Integer> pq =
-                new PriorityQueue<>(Collections.reverseOrder());
-
-        for (int f : freq) {
-            if (f > 0) pq.offer(f);
+        for(int i = 0; i < freq.length; i ++){
+            if(freq[i] > 0) maxHeap.offer(freq[i]);
         }
 
-        Queue<Task> q = new LinkedList<>();
         int time = 0;
+        while(!maxHeap.isEmpty() || !waitingQueue.isEmpty()){
+            time ++;
+            if(!maxHeap.isEmpty()){
+                int topFreq = maxHeap.poll();
+                topFreq -= 1;
+                if(topFreq > 0) waitingQueue.offer(new Task(topFreq , time + n));
+            }
 
-        while (!pq.isEmpty() || !q.isEmpty()) {
-
-            time++;
-
-            if (!pq.isEmpty()) {
-                int f = pq.poll() - 1;
-
-                if (f > 0) {
-                    q.offer(new Task(f, time + n));
+            if(!waitingQueue.isEmpty()){
+                Task mostRecentTask = waitingQueue.peek();
+                if (mostRecentTask.waitTime == time){
+                    waitingQueue.poll();
+                    maxHeap.offer(mostRecentTask.freq);
                 }
             }
-
-            if (!q.isEmpty() && q.peek().time == time) {
-                pq.offer(q.poll().freq);
-            }
         }
-
         return time;
     }
 }
