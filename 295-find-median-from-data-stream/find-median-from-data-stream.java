@@ -1,32 +1,41 @@
-import java.util.*;
-
 class MedianFinder {
 
-    private PriorityQueue<Integer> maxHeap; // left (smaller half)
-    private PriorityQueue<Integer> minHeap; // right (larger half)
+    List<Integer> dataStore;
 
     public MedianFinder() {
-        maxHeap = new PriorityQueue<>(Collections.reverseOrder());
-        minHeap = new PriorityQueue<>();
+        dataStore = new ArrayList<>();
     }
-    
+
     public void addNum(int num) {
-        // Step 1: add to maxHeap
-        maxHeap.offer(num);
-        
-        // Step 2: balance order
-        minHeap.offer(maxHeap.poll());
-        
-        // Step 3: balance size
-        if (minHeap.size() > maxHeap.size()) {
-            maxHeap.offer(minHeap.poll());
-        }
+        int index = findInsertIndex(num);
+        dataStore.add(index, num);
     }
-    
-    public double findMedian() {
-        if (maxHeap.size() > minHeap.size()) {
-            return maxHeap.peek();
+
+    private int findInsertIndex(int target) {
+        int l = 0;
+        int r = dataStore.size() - 1;
+
+        while (l <= r) {
+            int m = l + (r - l) / 2;
+
+            if (dataStore.get(m) == target)
+                return m;
+            else if (dataStore.get(m) < target)
+                l = m + 1;
+            else
+                r = m - 1;
         }
-        return (maxHeap.peek() + minHeap.peek()) / 2.0;
+
+        return l;
+    }
+
+    public double findMedian() {
+        int n = dataStore.size();
+
+        if (n % 2 == 1)
+            return dataStore.get(n / 2);
+
+        return ((double) dataStore.get(n / 2 - 1)
+                + dataStore.get(n / 2)) / 2.0;
     }
 }
