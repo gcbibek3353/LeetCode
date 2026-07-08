@@ -1,41 +1,32 @@
 class MedianFinder {
-
-    List<Integer> dataStore;
-
+    Queue<Integer> minHeap;
+    Queue<Integer> maxHeap;
     public MedianFinder() {
-        dataStore = new ArrayList<>();
+        minHeap = new PriorityQueue<>((a , b) -> a - b);
+        maxHeap = new PriorityQueue<>((a , b) -> b - a);
     }
-
+    
     public void addNum(int num) {
-        int index = findInsertIndex(num);
-        dataStore.add(index, num);
+        if(minHeap.size() == 0) minHeap.offer(num);
+        else if(num >= minHeap.peek()) minHeap.offer(num);
+        else maxHeap.offer(num);
+        int minHeapSize = minHeap.size();
+        int maxHeapSize = maxHeap.size();
+        if(minHeapSize > maxHeapSize + 1) maxHeap.offer(minHeap.poll());
+        else if (minHeapSize < maxHeapSize) minHeap.offer(maxHeap.poll());
     }
-
-    private int findInsertIndex(int target) {
-        int l = 0;
-        int r = dataStore.size() - 1;
-
-        while (l <= r) {
-            int m = l + (r - l) / 2;
-
-            if (dataStore.get(m) == target)
-                return m;
-            else if (dataStore.get(m) < target)
-                l = m + 1;
-            else
-                r = m - 1;
-        }
-
-        return l;
-    }
-
+    
     public double findMedian() {
-        int n = dataStore.size();
-
-        if (n % 2 == 1)
-            return dataStore.get(n / 2);
-
-        return ((double) dataStore.get(n / 2 - 1)
-                + dataStore.get(n / 2)) / 2.0;
+        if(minHeap.size() == maxHeap.size()){
+            return ((double)minHeap.peek() + maxHeap.peek()) / 2.0;
+        }
+        else return minHeap.peek();
     }
 }
+
+/**
+ * Your MedianFinder object will be instantiated and called as such:
+ * MedianFinder obj = new MedianFinder();
+ * obj.addNum(num);
+ * double param_2 = obj.findMedian();
+ */
