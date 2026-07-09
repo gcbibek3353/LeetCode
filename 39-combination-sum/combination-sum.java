@@ -1,20 +1,22 @@
 class Solution {
     List<List<Integer>> ans = new ArrayList<>();
-    List<Integer> curArr = new ArrayList<>();
+    List<Integer> curList = new ArrayList<>();
     public List<List<Integer>> combinationSum(int[] candidates, int target) {
-        dfs(candidates , 0 , 0 , target);
+        generate(0 , 0 , candidates , target);
         return ans;
     }
 
-    private void dfs(int[] candidates , int index , int curSum , int target) {
-        if(curSum == target) {
-            ans.add(new ArrayList<>(curArr));
+    private void generate(int curSum , int curIndex, int[] candidates , int target) {
+        if(curSum > target || curIndex == candidates.length) return;
+        if(curSum == target){
+            List<Integer> curAns = new ArrayList<>();
+            for(int i = 0; i < curList.size(); i ++) curAns.add(curList.get(i));
+            ans.add(curAns);
             return;
         }
-        if(curSum > target || index >= candidates.length) return;
-        curArr.add(candidates[index]);
-        dfs(candidates , index , curSum + candidates[index],target);
-        curArr.remove(curArr.size() - 1);
-        dfs(candidates , index + 1 , curSum , target);
+        curList.add(candidates[curIndex]);
+        generate(curSum + candidates[curIndex], curIndex , candidates , target);
+        curList.remove(curList.size() - 1);
+        generate(curSum , curIndex + 1 , candidates , target);
     }
 }
