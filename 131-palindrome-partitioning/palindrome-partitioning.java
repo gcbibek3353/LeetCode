@@ -1,27 +1,27 @@
 class Solution {
+    List<List<String>> ans = new ArrayList<>();
+    List<String> curList = new ArrayList<>();
+
     public List<List<String>> partition(String s) {
-        List<List<String>> res = new ArrayList<>();
-        List<String> path = new ArrayList<>();
-
-        partitionHelper(s, 0, path, res);
-
-        return res;
+        helper(0, s);
+        return ans;
     }
 
-    private void partitionHelper(String s, int index, List<String> path, List<List<String>> res) {
-        if (index == s.length()) {
-            res.add(new ArrayList<>(path));
-            return;
-        }
-
-        for (int i = index; i < s.length(); i++) {
-            if (isPalindrome(s, index, i)) {
-                path.add(s.substring(index, i + 1));
-                partitionHelper(s, i + 1, path, res);
-                path.remove(path.size() - 1); // Backtrack
-            }
-        }
+   private void helper(int curIndex, String s){
+    if(curIndex == s.length()){
+        ans.add(new ArrayList(curList));
+        return;
     }
+
+    for(int i = curIndex ; i < s.length(); i ++){
+        if(isPalindrome(s , curIndex , i)){
+            curList.add(s.substring(curIndex , i + 1));
+            helper(i + 1 , s);
+            curList.remove(curList.size() - 1);
+        } 
+    }
+
+   }
 
     private boolean isPalindrome(String s, int start, int end) {
         while (start <= end) {
