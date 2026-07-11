@@ -1,20 +1,22 @@
 class Solution {
-    List<List<Integer>> out = new ArrayList<>();
-    List<Integer> temp = new ArrayList<>();
+    List<List<Integer>> ans = new ArrayList<>();
+    List<Integer> curList = new ArrayList<>();
     public List<List<Integer>> combine(int n, int k) {
-        helper(1, n, k);
-        return out;
+        generate(0, n , k);
+        return ans;
     }
-    private void helper(int start, int n, int k){
-        if(temp.size()==k){
-            out.add(new ArrayList<>(temp));
+
+    private void generate(int noOfDigits , int n , int k){
+        if(noOfDigits == k){
+            ans.add(new ArrayList(curList));
             return;
         }
-        // if((n-start+1)<(k-temp.size()))return;
-        for(int i=start;i<=n;i++){
-            temp.add(i);
-            helper(i+1, n, k);
-            temp.removeLast();
+        int lastDigitInCurList = 0;
+        lastDigitInCurList = curList.size() > 0 ? curList.get(curList.size() - 1) : 0;
+        for(int i = lastDigitInCurList + 1; i <= n; i ++) {
+            curList.add(i);
+            generate(noOfDigits + 1 , n , k);
+            curList.remove(curList.size() - 1);
         }
     }
 }
