@@ -12,12 +12,14 @@ class Solution {
             return;
         }
 
+
+        // pick
         curList.add(nums[curIndex]);
         generate(nums , curIndex + 1);
         curList.remove(curList.size() - 1);
-
-        while(curIndex < nums.length - 1 && nums[curIndex] == nums[curIndex + 1]) curIndex ++;
-        generate(nums , curIndex + 1);
+        // don't pick
+        int tempIndex = curIndex;
+        while(tempIndex != nums.length - 1 && nums[tempIndex] == nums[tempIndex + 1]) tempIndex ++;
+        generate(nums , tempIndex + 1);
     }
-
 }
