@@ -1,24 +1,27 @@
 class Solution {
     List<List<Integer>> ans = new ArrayList<>();
+    List<Integer> curList = new ArrayList<>();
     public List<List<Integer>> combinationSum2(int[] candidates, int target) {
         Arrays.sort(candidates);
-        List<Integer> curArr = new ArrayList<>();
-        dfs(0,curArr , 0 , target , candidates);
+        generate(candidates , target , 0 , 0);
         return ans;
     }
 
-    private void dfs(int index , List<Integer> curArr , int curSum , int target , int[] candidates) {
+    private void generate(int[] candidates , int target , int curIndex , int curSum) {
         if(curSum == target){
-            List<Integer> curAns = new ArrayList<>();
-            for(int i = 0; i < curArr.size(); i ++) curAns.add(curArr.get(i));
-            ans.add(curAns);
+            ans.add(new ArrayList(curList));
             return;
         }
-        if(index >= candidates.length || curSum > target) return;
-        curArr.add(candidates[index]);
-        dfs(index + 1 , curArr , curSum + candidates[index], target , candidates);
-        curArr.remove(curArr.size() - 1);
-        while(index < candidates.length - 1 && candidates[index] == candidates[index + 1]) index ++;
-        dfs(index + 1 , curArr, curSum , target , candidates);
+        if(curSum > target || curIndex >= candidates.length) return;
+        // Doesn't include the curIndex
+        int tempIndex = curIndex;
+        while(tempIndex != candidates.length - 1 && candidates[tempIndex] == candidates[tempIndex + 1]) tempIndex ++;
+        generate(candidates , target , tempIndex + 1, curSum);
+
+        // Include the curIndex
+        curList.add(candidates[curIndex]);
+        generate(candidates , target , curIndex + 1 , curSum + candidates[curIndex]);
+        curList.remove(curList.size() - 1);
     }
+
 }
