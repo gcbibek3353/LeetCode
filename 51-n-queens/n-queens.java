@@ -1,64 +1,63 @@
 class Solution {
     List<List<String>> ans = new ArrayList<>();
-
     public List<List<String>> solveNQueens(int n) {
+        if(n < 4 && n >= 2) return ans;
         char[][] board = new char[n][n];
-
-        // initialize board
-        for (int i = 0; i < n; i++) {
-            Arrays.fill(board[i], '.');
+        for(int i = 0; i <n; i ++){
+            for(int j = 0; j < n; j ++) board[i][j] = '.';
         }
-
-        solve(board, 0, n);
+        solve(0 , board, n);
         return ans;
     }
 
-    private void solve(char[][] board, int col, int n) {
-        if (col == n) {
-            ans.add(construct(board));
+    private void solve(int col , char[][] board , int n){
+        if(col == n){
+            construct(board);
             return;
         }
-
-        for (int row = 0; row < n; row++) {
-            if (isSafe(row, col, board, n)) {
-                board[row][col] = 'Q';      // place
-                solve(board, col + 1, n);
-                board[row][col] = '.';      // backtrack
+        for(int i = 0; i < n; i ++) {
+            if(isSafe(i , col , board)){
+                board[i][col] = 'Q';
+                solve(col + 1, board,n);
+                board[i][col] = '.';
             }
         }
     }
 
-    private boolean isSafe(int row, int col, char[][] board, int n) {
-        int r = row, c = col;
-
-        // upper-left diagonal
-        while (r >= 0 && c >= 0) {
-            if (board[r][c] == 'Q') return false;
-            r--; c--;
+    private boolean isSafe(int row , int col , char[][] board){
+        int n = board.length;
+        int r = row;
+        int c = col;
+        // check on top left
+        while(r >= 0 && c >= 0) {
+            if(board[r][c] == 'Q') return false;
+            r --;
+            c --;
         }
-
-        // left row
+        r = row;
         c = col;
-        while (c >= 0) {
-            if (board[row][c] == 'Q') return false;
-            c--;
+        while(c >= 0){
+            if(board[r][c] == 'Q') return false;
+            c --;
         }
-
-        // lower-left diagonal
-        r = row; c = col;
-        while (r < n && c >= 0) {
-            if (board[r][c] == 'Q') return false;
-            r++; c--;
+        c = col;
+        while(r < n && c >= 0){
+            if(board[r][c] == 'Q') return false;
+            r ++;
+            c --;
         }
-
         return true;
     }
 
-    private List<String> construct(char[][] board) {
-        List<String> res = new ArrayList<>();
-        for (char[] row : board) {
-            res.add(new String(row));
+    private void construct(char[][] board) {
+        List<String> curList = new ArrayList<>();
+        for(int i = 0; i < board.length; i ++){
+            String curStr = "";
+            for(int j = 0; j < board[0].length; j ++) {
+                curStr += board[i][j];
+            }
+            curList.add(curStr);
         }
-        return res;
+        ans.add(curList);
     }
 }
