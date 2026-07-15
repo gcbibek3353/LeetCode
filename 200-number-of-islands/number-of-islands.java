@@ -1,55 +1,49 @@
 class Solution {
 
-    static class coords{
-        int i;
-        int j;
-        coords(int i,int j){
-            this.i = i;
-            this.j = j;
+    class Cell {
+        int row;
+        int col;
+
+        public Cell(int r, int c) {
+            row = r;
+            col = c;
         }
     }
 
     public int numIslands(char[][] grid) {
-        int count = 0;
         int r = grid.length;
         int c = grid[0].length;
         boolean[][] visited = new boolean[r][c];
-        for(int i = 0; i < r; i ++){
-            boolean[] curRow = new boolean[c];
-            for(int j = 0; j < c; j ++){
-                curRow[j] = false;
-            }
-            visited[i] = curRow;
-        }
+        int noOfIslands = 0;
+        int[][] directions = { { 0, 1 }, { 0, -1 }, { 1, 0 }, { -1, 0 } };
+        for (int i = 0; i < r; i++) {
+            for (int j = 0; j < c; j++) {
+                if (grid[i][j] == '0' || visited[i][j])
+                    continue;
+                noOfIslands++;
+                Queue<Cell> q = new LinkedList<>();
+                q.offer(new Cell(i, j));
+                visited[i][j] = true;
 
-        for(int i = 0; i < r; i ++){
-            for(int j = 0; j < c; j ++){
-                if(grid[i][j] == '1' && !visited[i][j]){
-                    bfs(grid,i,j,visited);
-                    count ++;
-                } 
-            }
-        }
-        return count;
-    }
+                while (!q.isEmpty()) {
+                    Cell cur = q.poll();
 
-    private static void bfs(char[][] grid , int i, int j,boolean[][] visited){
-        Queue<coords> q = new LinkedList<>();
-        q.offer(new coords(i,j));
-        int[][] directions = {{1,0},{-1,0},{0,1},{0,-1}};
+                    for (int[] dir : directions) {
+                        int nr = cur.row + dir[0];
+                        int nc = cur.col + dir[1];
 
-        while(!q.isEmpty()) {
-            coords curCoords = q.poll();
-            for(int[] direction : directions){
-                int curRow = curCoords.i + direction[0];
-                int curCol = curCoords.j + direction[1];
-                if(curRow < 0 || curRow >= grid.length || curCol < 0 || curCol >= grid[0].length) continue;
-                if(grid[curRow][curCol] == '1' && !visited[curRow][curCol]){
-                    q.offer(new coords(curRow,curCol));
-                    visited[curRow][curCol] = true;
+                        if (nr < 0 || nr >= r || nc < 0 || nc >= c)
+                            continue;
+
+                        if (grid[nr][nc] == '0' || visited[nr][nc])
+                            continue;
+
+                        visited[nr][nc] = true;
+                        q.offer(new Cell(nr, nc));
+                    }
                 }
             }
         }
+        return noOfIslands;
     }
-
 }
