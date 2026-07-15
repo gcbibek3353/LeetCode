@@ -1,40 +1,44 @@
-/*
-// Definition for a Node.
-class Node {
-    public int val;
-    public List<Node> neighbors;
-    public Node() {
-        val = 0;
-        neighbors = new ArrayList<Node>();
-    }
-    public Node(int _val) {
-        val = _val;
-        neighbors = new ArrayList<Node>();
-    }
-    public Node(int _val, ArrayList<Node> _neighbors) {
-        val = _val;
-        neighbors = _neighbors;
-    }
-}
-*/
-
 class Solution {
     public Node cloneGraph(Node node) {
-        Map<Node , Node> mp = new HashMap<>();
-        return dfs(node , mp);
+        if (node == null) return null;
+
+        Map<Node, Node> mp = new HashMap<>();
+        Set<Node> visited = new HashSet<>();
+        Set<Node> visited2 = new HashSet<>();
+
+        dfs(node, visited, mp);
+        setNeighbours(node, visited2, mp);
+
+        return mp.get(node);
     }
 
-    private Node dfs(Node node , Map<Node , Node> mp) {
-        if(node == null) return node;
-        if(mp.containsKey(node)) return node;
-        List<Node> newNeighbors = new ArrayList<>();
-        Node newNode = new Node();
-        newNode.val = node.val;
-        mp.put(node , newNode);
-        List<Node> neighbors = node.neighbors;
-        for(int i = 0; i < neighbors.size(); i ++)dfs(neighbors.get(i),mp);
-        for(int i = 0; i < neighbors.size(); i ++) newNeighbors.add(mp.get(neighbors.get(i)));
-        newNode.neighbors = newNeighbors;
-        return newNode;
+    private void setNeighbours(Node head, Set<Node> visited,
+                               Map<Node, Node> mp) {
+
+        if (head == null || visited.contains(head)) return;
+
+        visited.add(head);
+
+        List<Node> newneighbors = new ArrayList<>();
+
+        for (Node nei : head.neighbors) {
+            newneighbors.add(mp.get(nei));
+            setNeighbours(nei, visited, mp);
+        }
+
+        mp.get(head).neighbors = newneighbors;
+    }
+
+    private void dfs(Node head, Set<Node> visited,
+                     Map<Node, Node> mp) {
+
+        if (head == null || visited.contains(head)) return;
+
+        visited.add(head);
+        mp.put(head, new Node(head.val));
+
+        for (Node nei : head.neighbors) {
+            dfs(nei, visited, mp);
+        }
     }
 }
