@@ -1,84 +1,58 @@
 class Solution {
-    static class coords {
-        int i;
-        int j;
-
-        coords(int i, int j) {
-            this.i = i;
-            this.j = j;
+    class Coords{
+        int r;
+        int c;
+        public Coords(int row , int col){
+            r = row;
+            c = col;
         }
     }
 
-    public void solve(char[][] grid) {
-        int r = grid.length;
-        int c = grid[0].length;
-
-        boolean[][] isSurrounded = new boolean[r][c];
-        boolean[][] visited = new boolean[r][c];
-
-          for(int i = 0; i < r; i ++){
-            boolean[] curRow = new boolean[c];
-            boolean[] surroundedCurRow = new boolean[c]; 
-            for(int j = 0; j < c; j ++){
-                curRow[j] = false;
-                surroundedCurRow[j] = false;
-            }
-            visited[i] = curRow;
-            isSurrounded[i] = surroundedCurRow;
+    boolean[][] isNotSurrounded; 
+    boolean[][] visited; 
+    public void solve(char[][] board) {
+        int r = board.length;
+        int c = board[0].length;
+        isNotSurrounded = new boolean[r][c];
+        visited = new boolean[r][c];
+        for(int i = 0; i < c; i ++){
+            if(board[0][i] == 'O') bfs(0 , i , board);
         }
-
-        for (int i = 0; i < c; i++) {
-            char curChar = grid[0][i];
-            if (curChar == 'O' && !visited[0][i])
-                bfs(grid, isSurrounded, visited, 0, i);
+        for(int i = 0; i < r; i ++){
+            if(board[i][c - 1] == 'O') bfs(i , c - 1 , board);
         }
-        for (int i = 1; i < r; i++) {
-            char curChar = grid[i][c - 1];
-            if (curChar == 'O' && !visited[i][c - 1])
-                bfs(grid, isSurrounded, visited, i, c - 1);
+        for(int i = c - 1; i >= 0; i --){
+            // System.out.printf("%d , %d , %c \n", r - 1 , i , board[r - 1][i]);
+            if(board[r - 1][i] == 'O') bfs(r - 1 , i , board);
         }
-        for (int i = c - 2; i >= 0; i--) {
-            char curChar = grid[r - 1][i];
-            if (curChar == 'O' && !visited[r - 1][i])
-                bfs(grid, isSurrounded, visited, r - 1, i);
-        }
-        for (int i = r - 2; i >= 1; i--) {
-            char curChar = grid[i][0];
-            if (curChar == 'O' && !visited[i][0])
-                bfs(grid, isSurrounded, visited, i, 0);
+        for(int i = r - 1; i >= 0; i --){
+            if(board[i][0] == 'O') bfs(i , 0 , board);
         }
 
         for(int i = 0; i < r; i ++){
-            for(int j = 0; j < c; j ++){
-                if(isSurrounded[i][j]){
-                    grid[i][j] = 'O';
-                } 
-                else{
-                    grid[i][j] = 'X';     
-                }
+            for(int j = 0; j < c; j ++) {
+                // System.out.printf("%d , %d , %b \n",i,j,isNotSurrounded[i][j]);
+                if(board[i][j] == 'O' && !isNotSurrounded[i][j]) board[i][j] = 'X';
             }
         }
     }
 
-    private void bfs(char[][] grid, boolean[][] isSurrounded, boolean[][] visited, int i, int j) {
-        Queue<coords> q = new LinkedList<>();
-        q.offer(new coords(i, j));
+    private void bfs(int i , int j, char[][] board){
+        if(visited[i][j]) return;
+        isNotSurrounded[i][j] = true;
         visited[i][j] = true;
-        isSurrounded[i][j] = true;
-        int[][] directions = { { 1, 0 }, { -1, 0 }, { 0, 1 }, { 0, -1 } };
-
-         while(!q.isEmpty()) {
-            coords curCoords = q.poll();
-            for(int[] direction : directions){
-                int curRow = curCoords.i + direction[0];
-                int curCol = curCoords.j + direction[1];
-                if(curRow < 0 || curRow >= grid.length || curCol < 0 || curCol >= grid[0].length) continue;
-                if(grid[curRow][curCol] == 'O' && !visited[curRow][curCol]){
-                    q.offer(new coords(curRow,curCol));
-                    visited[curRow][curCol] = true;
-                    isSurrounded[curRow][curCol] = true;
-                }
-            }
+        int r = board.length;
+        int c = board[0].length;
+        // Queue<Coords> q = new LinkedList<>();
+        int[][] directions = {{0 , 1} , {0 , -1}, {1 , 0}, { -1 , 0}};
+        for(int[] direction : directions) {
+            int curRow = i + direction[0];
+            int curCol = j + direction[1];
+            if(curRow < 0 || curRow >= r) continue;
+            if(curCol < 0 || curCol >= c) continue;
+            if(board[curRow][curCol] == 'X') continue;
+            bfs(curRow , curCol , board);
         }
     }
+
 }
