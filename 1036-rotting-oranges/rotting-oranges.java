@@ -1,44 +1,53 @@
 class Solution {
-    static class coords{
-        int i;
-        int j;
-        coords(int i,int j) {
-            this.i = i;
-            this.j = j;
+    class Coord{
+        int r;
+        int c;
+        public Coord(int row , int col){
+            r = row;
+            c = col;
         }
     }
+
     public int orangesRotting(int[][] grid) {
         int r = grid.length;
         int c = grid[0].length;
-        int[][] visited = new int[r][c];
-        int freshOranges = 0;
-        int time = 0;
-        Queue<coords> q = new LinkedList<>();
-        for(int i = 0; i < r; i ++){
-            for(int j = 0; j < c ;j ++){
-                if(grid[i][j] == 1) freshOranges ++;
-                else if (grid[i][j] == 2) q.offer(new coords(i,j));
-            }
-        }
-        int[][] directions = {{0,1},{0,-1},{1,0},{-1,0}};
+        boolean[][] visited = new boolean[r][c];
+        Queue<Coord> q = new LinkedList<>();
+        int orangeCount = 0;
+        int rottenCount = 0;
 
-        while(!q.isEmpty() && freshOranges > 0 ){
-            int size = q.size();
-            while(size -- > 0) {
-                coords curCoords = q.poll();
-                for(int i = 0; i < directions.length; i ++){
-                    int curRow = curCoords.i + directions[i][0];
-                    int curCol = curCoords.j + directions[i][1];
-                    if(curRow < 0 || curRow >= r
-                    || curCol < 0 || curCol >= c 
-                    || grid[curRow][curCol] != 1) continue;
-                    q.offer(new coords(curRow,curCol));
-                    grid[curRow][curCol] = 2;
-                    freshOranges --;
+        for(int i = 0; i< r; i ++){
+            for(int j = 0; j < c; j ++) {
+                if(grid[i][j] != 0) orangeCount ++;
+                if(grid[i][j] == 2){
+                    rottenCount ++;
+                    q.offer(new Coord(i , j));
+                    // visited[i][j] = true;
                 }
             }
-            time ++;
         }
- return freshOranges > 0 ? -1 : time;
+
+        int timeSpent = 0;
+        int[][] directions = {{0 , 1} , {0 , -1}, {1 , 0}, { -1 , 0}};
+        while(!q.isEmpty()){
+            int queueSize = q.size();
+            timeSpent ++;
+            for(int i = 0; i < queueSize; i ++) {
+                Coord curCord = q.poll();
+                for(int[] direction : directions) {
+                    int curRow = curCord.r + direction[0];
+                    int curCol = curCord.c + direction[1];
+                    if(curRow < 0 || curRow >= r) continue;
+                    if(curCol < 0 || curCol >= c) continue;
+                    if(visited[curRow][curCol] || grid[curRow][curCol] != 1) continue;
+                    q.offer(new Coord(curRow , curCol));
+                    rottenCount ++;
+                    visited[curRow][curCol] = true;
+                }
+            }
+        }
+
+        return rottenCount == orangeCount ? ((timeSpent == 0) ? 0 : timeSpent - 1) : -1;
+
     }
 }
