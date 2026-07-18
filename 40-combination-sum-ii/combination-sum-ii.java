@@ -1,27 +1,34 @@
-class Solution {
-    List<List<Integer>> ans = new ArrayList<>();
-    List<Integer> curList = new ArrayList<>();
-    public List<List<Integer>> combinationSum2(int[] candidates, int target) {
-        Arrays.sort(candidates);
-        generate(candidates , target , 0 , 0);
-        return ans;
-    }
+class Solution { 
+    public List<List<Integer>> combinationSum2(int[] candidates, int target) { 
+        Arrays.sort(candidates); 
+        List<List<Integer>> ans = new ArrayList<>(); 
+        List<Integer> curList = new ArrayList<>(); 
+        
+        // Start the recursive process once from index 0
+        generate(candidates, target, ans, curList, 0, 0); 
+        return ans; 
+    } 
 
-    private void generate(int[] candidates , int target , int curIndex , int curSum) {
-        if(curSum == target){
-            ans.add(new ArrayList(curList));
-            return;
+    private void generate(int[] candidates, int target, List<List<Integer>> ans, List<Integer> curList, int index, int curSum) { 
+        if (curSum == target) { 
+            ans.add(new ArrayList<>(curList)); 
+            return; 
+        } 
+        if (curSum > target || index >= candidates.length) {
+            return; 
         }
-        if(curSum > target || curIndex >= candidates.length) return;
-        // Doesn't include the curIndex
-        int tempIndex = curIndex;
-        while(tempIndex != candidates.length - 1 && candidates[tempIndex] == candidates[tempIndex + 1]) tempIndex ++;
-        generate(candidates , target , tempIndex + 1, curSum);
 
-        // Include the curIndex
-        curList.add(candidates[curIndex]);
-        generate(candidates , target , curIndex + 1 , curSum + candidates[curIndex]);
-        curList.remove(curList.size() - 1);
-    }
-
+        // Loop starts directly at 'index' to handle the current element
+        for (int i = index; i < candidates.length; i++) { 
+            // Correct duplicate skipping within the same decision level
+            if (i > index && candidates[i] == candidates[i - 1]) {
+                continue; 
+            }
+            
+            curList.add(candidates[i]); 
+            // Move to 'i + 1' to avoid reusable elements 
+            generate(candidates, target, ans, curList, i + 1, curSum + candidates[i]); 
+            curList.remove(curList.size() - 1); 
+        } 
+    } 
 }
