@@ -1,43 +1,33 @@
 class Solution {
     public boolean canFinish(int numCourses, int[][] prerequisites) {
-        List<List<Integer>> graph = new ArrayList<>();
-        for(int i = 0; i < numCourses; i ++) graph.add(new ArrayList<>());
-        
-        for(int[] prerequisite : prerequisites){
-            graph.get(prerequisite[1]).add(prerequisite[0]);
+        List<List<Integer>> adj = new ArrayList<>();
+        for(int i = 0; i < numCourses; i ++) adj.add(new ArrayList<>());
+
+        for(int[] pre : prerequisites) {
+            adj.get(pre[1]).add(pre[0]);
         }
-
-        boolean[] visited = new boolean[numCourses];
         boolean[] path = new boolean[numCourses];
+        boolean[] visited = new boolean[numCourses];
 
-        for(int i = 0; i < numCourses; i ++) {
-            if(!visited[i] && cycleDetect(i, graph, visited, path)) return false;
+        for(int i = 0; i < numCourses; i ++ ) {
+            if(!visited[i]){
+                System.out.printf("i : %d , " ,i);
+                if(detectCycle(i , visited , path , adj)) return false;
+            }
         }
         return true;
-    }
+     }
 
-    private boolean cycleDetect(int node, List<List<Integer>> adj, boolean[] vis, boolean[] path) {
-        vis[node] = path[node] = true;
+    private boolean detectCycle(int node, boolean[] visited , boolean[] path , List<List<Integer>> adj) {
+        visited[node] = path[node] = true;
 
-        for (int next : adj.get(node))
-            if (!vis[next] && cycleDetect(next, adj, vis, path)) return true;
-            else if (path[next]) return true;
-            
+        List<Integer> neighbors = adj.get(node);
+        for(int nextNode : neighbors) {
+            // if(visited[nextNode]) return true;
+            if(!visited[nextNode] && detectCycle(nextNode , visited , path , adj)) return true;
+            if(path[nextNode]) return true;
+        }
         path[node] = false;
         return false;
     }
-
-    // private boolean cycleDetect(int j, boolean[] visited , boolean[] path, List<List<Integer>> graph) {
-    //     visited[j] = path[j] = true;
-    //     List<Integer> neighbors = graph.get(j);
-    //     for(int i = 0; i < neighbors.size(); i ++){
-    //         if(!visited[neighbors.get(i)] && cycleDetect(i , visited, path , graph) ) return true;
-    //         if(path[neighbors.get(i)]) return true;
-    //         // if(cycleDetect(i , visited, path , graph)) return true;
-    //     }
-    //     path[j] = false;
-    //     return false;
-    // }
-
-
 }
