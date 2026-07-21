@@ -1,6 +1,6 @@
 class Solution {
     public boolean closeStrings(String word1, String word2) {
-         if (word1.length() != word2.length()) {
+        if (word1.length() != word2.length()) {
             return false;
         }
 
@@ -18,9 +18,8 @@ class Solution {
 
         // Check if both strings contain the same set of characters
         for (int i = 0; i < 26; i++) {
-            if ((freq1[i] == 0) != (freq2[i] == 0)) {
-                return false;
-            }
+            if(freq1[i] == 0 && freq2[i] == 0) continue;
+            if(freq1[i] == 0 || freq2[i] == 0) return false;
         }
 
         // Sort frequency arrays
@@ -31,4 +30,3 @@ class Solution {
         return Arrays.equals(freq1, freq2);
     }
 }
-
