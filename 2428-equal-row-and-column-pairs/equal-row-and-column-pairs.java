@@ -1,34 +1,32 @@
 class Solution {
-    public int equalPairs(int[][] grid) {
-         int n = grid.length;
-        int count = 0;
+   public int equalPairs(int[][] grid) {
+    Map<List<Integer>, Integer> colMap = new HashMap<>();
+    int n = grid.length;
 
-        // Store each row and its frequency
-        Map<List<Integer>, Integer> map = new HashMap<>();
+    // Store columns
+    for (int j = 0; j < n; j++) {
+        List<Integer> column = new ArrayList<>();
 
-        for (int r = 0; r < n; r++) {
-
-            List<Integer> row = new ArrayList<>();
-
-            for (int c = 0; c < n; c++) {
-                row.add(grid[r][c]);
-            }
-
-            map.put(row, map.getOrDefault(row, 0) + 1);
+        for (int i = 0; i < n; i++) {
+            column.add(grid[i][j]);
         }
 
-        // Build each column and check if it exists as a row
-        for (int c = 0; c < n; c++) {
-
-            List<Integer> col = new ArrayList<>();
-
-            for (int r = 0; r < n; r++) {
-                col.add(grid[r][c]);
-            }
-
-            count += map.getOrDefault(col, 0);
-        }
-
-        return count;
+        colMap.put(column, colMap.getOrDefault(column, 0) + 1);
     }
+
+    int ans = 0;
+
+    // Check rows
+    for (int i = 0; i < n; i++) {
+        List<Integer> row = new ArrayList<>();
+
+        for (int j = 0; j < n; j++) {
+            row.add(grid[i][j]);
+        }
+
+        ans += colMap.getOrDefault(row, 0);
+    }
+
+    return ans;
+}
 }
