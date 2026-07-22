@@ -1,33 +1,38 @@
 class Solution {
     public String convert(String s, int numRows) {
-        if (numRows == 1 || s.length() <= numRows) {
-            return s;
+        List<Character>[] list = new ArrayList[numRows];
+        if(numRows == 1) return s;
+        for(int i = 0; i < numRows; i ++) {
+            list[i] = new ArrayList<>();
         }
-
-        StringBuilder[] words = new StringBuilder[numRows];
-        for (int i = 0; i < numRows; i++) {
-            words[i] = new StringBuilder();
-        }
-
-        int i = 0;
-        while (i < s.length()) {
-
-            // down
-            for (int j = 0; j < numRows && i < s.length(); j++) {
-                words[j].append(s.charAt(i++));
+        int curRow = 0;
+        boolean downDir = true;
+        for (int i = 0; i < s.length(); i++) {
+            char curChar = s.charAt(i);
+            list[curRow].add(curChar);
+            if (downDir) {
+                if (curRow < numRows - 1)
+                    curRow++;
+                else {
+                    curRow--;
+                    downDir = false;
+                }
+            } else {
+                if (curRow > 0)
+                    curRow--;
+                else {
+                    curRow++;
+                    downDir = true;
+                }
             }
-
-            // up (skip first and last row)
-            for (int j = numRows - 2; j > 0 && i < s.length(); j--) {
-                words[j].append(s.charAt(i++));
+        }
+        StringBuilder ans = new StringBuilder();
+        for (int i = 0; i < list.length; i++) {
+            List<Character> curList = list[i];
+            for (int j = 0; j < curList.size(); j++) {
+                ans.append(curList.get(j));
             }
         }
-
-        StringBuilder res = new StringBuilder();
-        for (StringBuilder row : words) {
-            res.append(row);
-        }
-
-        return res.toString();
+        return ans.toString();
     }
 }
