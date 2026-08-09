@@ -1,46 +1,34 @@
 class Solution {
     public String minWindow(String s, String t) {
-          if (s.length() < t.length()) {
-            return "";
-        }
+        Map<Character, Integer> need = new HashMap<>();
+    for (char c : t.toCharArray()) 
+        need.put(c, need.getOrDefault(c, 0) + 1);
 
-        Map<Character, Integer> charCount = new HashMap<>();
-        for (char ch : t.toCharArray()) {
-            charCount.put(ch, charCount.getOrDefault(ch, 0) + 1);
-        }
+    Map<Character, Integer> have = new HashMap<>();
+    int formed = 0;
+    int i = 0;
+    int minLen = Integer.MAX_VALUE;
+    String result = "";
 
-        int targetCharsRemaining = t.length();
-        int[] minWindow = {0, Integer.MAX_VALUE};
-        int startIndex = 0;
+    for (int j = 0; j < s.length(); j++) {
+        char c = s.charAt(j);
+        have.put(c, have.getOrDefault(c, 0) + 1);
+        
+        if (need.containsKey(c) && have.get(c).equals(need.get(c)))
+            formed++;
 
-        for (int endIndex = 0; endIndex < s.length(); endIndex++) {
-            char ch = s.charAt(endIndex);
-            if (charCount.containsKey(ch) && charCount.get(ch) > 0) {
-                targetCharsRemaining--;
+        while (formed == need.size()) {
+            if (j - i + 1 < minLen) {
+                minLen = j - i + 1;
+                result = s.substring(i, j + 1);
             }
-            charCount.put(ch, charCount.getOrDefault(ch, 0) - 1);
-
-            if (targetCharsRemaining == 0) {
-                while (true) {
-                    char charAtStart = s.charAt(startIndex);
-                    if (charCount.containsKey(charAtStart) && charCount.get(charAtStart) == 0) {
-                        break;
-                    }
-                    charCount.put(charAtStart, charCount.getOrDefault(charAtStart, 0) + 1);
-                    startIndex++;
-                }
-
-                if (endIndex - startIndex < minWindow[1] - minWindow[0]) {
-                    minWindow[0] = startIndex;
-                    minWindow[1] = endIndex;
-                }
-
-                charCount.put(s.charAt(startIndex), charCount.getOrDefault(s.charAt(startIndex), 0) + 1);
-                targetCharsRemaining++;
-                startIndex++;
-            }
+            char left = s.charAt(i);
+            have.put(left, have.get(left) - 1);
+            if (need.containsKey(left) && have.get(left) < need.get(left))
+                formed--;
+            i++;
         }
-
-        return minWindow[1] >= s.length() ? "" : s.substring(minWindow[0], minWindow[1] + 1);        
+    }
+    return result;
     }
 }
