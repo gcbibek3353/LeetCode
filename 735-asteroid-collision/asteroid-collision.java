@@ -2,34 +2,43 @@ class Solution {
     public int[] asteroidCollision(int[] asteroids) {
         ArrayDeque<Integer> st = new ArrayDeque<>();
 
-        for (int i = 0; i < asteroids.length; i++) {
-            if (asteroids[i] > 0) {
-                st.push(asteroids[i]);
+        for (int asteroid : asteroids) {
+
+            if (asteroid > 0) {
+                st.push(asteroid);
                 continue;
-            } else {
-                int curAsteroidSize = asteroids[i] * -1;
-                boolean isDestroyed = false;
-                while (st.size() > 0) {
-                    int topAsteroidSize = st.peek();
-                    if (topAsteroidSize < 0)
-                        break;
-                    if (topAsteroidSize < curAsteroidSize)
-                        st.pop();
-                    else if (topAsteroidSize == curAsteroidSize) {
-                        st.pop();
-                        isDestroyed = true;
-                        break;
-                    } else
-                        break;
+            }
+
+            boolean alive = true;
+
+            while (alive && !st.isEmpty() && st.peek() > 0) {
+
+                if (st.peek() < -asteroid) {
+                    // Stack asteroid explodes
+                    st.pop();
                 }
-                if (!isDestroyed && (st.size() == 0 || st.peek() < 0))
-                    st.push(asteroids[i]);
+                else if (st.peek() == -asteroid) {
+                    // Both explode
+                    st.pop();
+                    alive = false;
+                }
+                else {
+                    // Incoming asteroid explodes
+                    alive = false;
+                }
+            }
+
+            if (alive) {
+                st.push(asteroid);
             }
         }
+
         int[] ans = new int[st.size()];
+
         for (int i = ans.length - 1; i >= 0; i--) {
             ans[i] = st.pop();
         }
+
         return ans;
     }
 }
