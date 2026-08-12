@@ -1,42 +1,34 @@
 class Solution {
     public String decodeString(String s) {
+        ArrayDeque<Character> st = new ArrayDeque<>();
 
-        Stack<Integer> countStack = new Stack<>();
-        Stack<StringBuilder> stringStack = new Stack<>();
-
-        StringBuilder currentString = new StringBuilder();
-        int currentNumber = 0;
-
-        for (char ch : s.toCharArray()) {
-
-            if (Character.isDigit(ch)) {
-                currentNumber = currentNumber * 10 + (ch - '0');
-            }
-
-            else if (ch == '[') {
-                countStack.push(currentNumber);
-                stringStack.push(currentString);
-
-                currentNumber = 0;
-                currentString = new StringBuilder();
-            }
-
-            else if (ch == ']') {
-                int repeat = countStack.pop();
-                StringBuilder previous = stringStack.pop();
-
-                for (int i = 0; i < repeat; i++) {
-                    previous.append(currentString);
+        for(int i = 0; i < s.length(); i ++) {
+            char curChar = s.charAt(i);
+            if(curChar != ']') st.push(curChar);
+            else{
+                System.out.println(st);
+                String curString = "";
+                while(st.peek() != '[') curString = st.pop() + curString;
+                st.pop();
+                int curNum = 0;
+                int multiplicationFactor = 1;
+                while(!st.isEmpty() && Character.isDigit(st.peek())){
+                    int digit = st.pop() - '0';
+                    curNum += digit * multiplicationFactor;
+                    multiplicationFactor *= 10;
                 }
-
-                currentString = previous;
-            }
-
-            else {
-                currentString.append(ch);
+                System.out.printf("curNum : %d , curStr : %s \n", curNum, curString);
+                for(int count = 0; count < curNum; count ++) {
+                    for(int j = 0; j < curString.length(); j ++) {
+                        st.push(curString.charAt(j));
+                    }
+                }
             }
         }
-
-        return currentString.toString();
+        StringBuilder ans = new StringBuilder();
+        while(!st.isEmpty()){
+            ans.insert(0, st.pop());
+        }
+        return ans.toString();
     }
 }
