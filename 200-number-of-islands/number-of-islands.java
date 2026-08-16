@@ -1,49 +1,55 @@
 class Solution {
 
-    class Cell {
-        int row;
-        int col;
-
-        public Cell(int r, int c) {
-            row = r;
-            col = c;
+    public class Coord{
+        int r;
+        int c;
+        public Coord(int r , int c) {
+            this.r = r;
+            this.c = c;
         }
     }
+    int[][] directions = {{-1 , 0}, {1 , 0}, {0, -1}, { 0 , 1}};
+
 
     public int numIslands(char[][] grid) {
-        int r = grid.length;
-        int c = grid[0].length;
-        boolean[][] visited = new boolean[r][c];
-        int noOfIslands = 0;
-        int[][] directions = { { 0, 1 }, { 0, -1 }, { 1, 0 }, { -1, 0 } };
-        for (int i = 0; i < r; i++) {
-            for (int j = 0; j < c; j++) {
-                if (grid[i][j] == '0' || visited[i][j])
-                    continue;
-                noOfIslands++;
-                Queue<Cell> q = new LinkedList<>();
-                q.offer(new Cell(i, j));
-                visited[i][j] = true;
-
-                while (!q.isEmpty()) {
-                    Cell cur = q.poll();
-
-                    for (int[] dir : directions) {
-                        int nr = cur.row + dir[0];
-                        int nc = cur.col + dir[1];
-
-                        if (nr < 0 || nr >= r || nc < 0 || nc >= c)
-                            continue;
-
-                        if (grid[nr][nc] == '0' || visited[nr][nc])
-                            continue;
-
-                        visited[nr][nc] = true;
-                        q.offer(new Cell(nr, nc));
-                    }
+        int count = 0;
+        boolean[][] visited = new boolean[grid.length][grid[0].length];
+        for(int i = 0; i < grid.length; i ++) {
+            for(int j = 0; j < grid[0].length; j ++) {
+                if(!visited[i][j] && grid[i][j] == '1'){
+                    count ++;
+                    bfs(i , j , grid, visited);
                 }
             }
         }
-        return noOfIslands;
+        return count;
     }
+
+    private void bfs(int i , int j , char[][] grid , boolean[][] visited) {
+        Queue<Coord> q = new LinkedList<>();
+        Coord firstCoord = new Coord(i , j);
+        q.offer(firstCoord);
+
+        while(!q.isEmpty()) {
+            int size = q.size();
+            for(int count = 0; count < size; count ++) {
+                Coord curCoord = q.poll();
+                for(int[] dir : directions) {
+                    int curRow = curCoord.r + dir[0];
+                    int curCol = curCoord.c + dir[1];
+                    if(
+                        curRow >= 0 && curRow < grid.length &&
+                        curCol >= 0 && curCol < grid[0].length &&
+                        grid[curRow][curCol] == '1' && 
+                        !visited[curRow][curCol]
+                    ){
+                        Coord newCoord = new Coord(curRow , curCol); 
+                        q.offer(newCoord);
+                        visited[curRow][curCol] = true;
+                    } 
+                }
+            }
+        }
+    }
+    
 }
