@@ -1,44 +1,55 @@
+/*
+// Definition for a Node.
+class Node {
+    public int val;
+    public List<Node> neighbors;
+    public Node() {
+        val = 0;
+        neighbors = new ArrayList<Node>();
+    }
+    public Node(int _val) {
+        val = _val;
+        neighbors = new ArrayList<Node>();
+    }
+    public Node(int _val, ArrayList<Node> _neighbors) {
+        val = _val;
+        neighbors = _neighbors;
+    }
+}
+*/
+
 class Solution {
+    Set<Node> visited = new HashSet<>();
+    Map<Node , Node> mp = new HashMap<>();
     public Node cloneGraph(Node node) {
-        if (node == null) return null;
-
-        Map<Node, Node> mp = new HashMap<>();
-        Set<Node> visited = new HashSet<>();
-        Set<Node> visited2 = new HashSet<>();
-
-        dfs(node, visited, mp);
-        setNeighbours(node, visited2, mp);
-
+        createDuplicateNodes(node);
+        visited.clear();
+        setNeighbors(node);
         return mp.get(node);
     }
 
-    private void setNeighbours(Node head, Set<Node> visited,
-                               Map<Node, Node> mp) {
-
-        if (head == null || visited.contains(head)) return;
-
-        visited.add(head);
-
-        List<Node> newneighbors = new ArrayList<>();
-
-        for (Node nei : head.neighbors) {
-            newneighbors.add(mp.get(nei));
-            setNeighbours(nei, visited, mp);
+    private void createDuplicateNodes(Node node) {
+        if(node == null || visited.contains(node)) return;
+        visited.add(node);
+        Node newNode = new Node(node.val);
+        mp.put(node , newNode);
+        List<Node> neighbors = node.neighbors;
+        for(int i = 0; i < neighbors.size(); i ++) {
+            createDuplicateNodes(neighbors.get(i));
         }
-
-        mp.get(head).neighbors = newneighbors;
     }
 
-    private void dfs(Node head, Set<Node> visited,
-                     Map<Node, Node> mp) {
-
-        if (head == null || visited.contains(head)) return;
-
-        visited.add(head);
-        mp.put(head, new Node(head.val));
-
-        for (Node nei : head.neighbors) {
-            dfs(nei, visited, mp);
+    private void setNeighbors(Node node) {
+        if(node == null || visited.contains(node)) return;
+        Node curNode = mp.get(node);
+        visited.add(node);
+        List<Node> neighbors = node.neighbors;
+        for(int i = 0; i < neighbors.size(); i ++) {
+            Node curNeighbor = neighbors.get(i);
+            // if(!visited.contains(curNeighbor)){
+                curNode.neighbors.add(mp.get(curNeighbor));
+                setNeighbors(curNeighbor);
+            // }
         }
     }
 }
