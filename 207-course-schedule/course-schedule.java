@@ -1,33 +1,30 @@
 class Solution {
     public boolean canFinish(int numCourses, int[][] prerequisites) {
         List<List<Integer>> adj = new ArrayList<>();
-        for(int i = 0; i < numCourses; i ++) adj.add(new ArrayList<>());
-
+        int n = numCourses;
+        for(int i = 0; i < numCourses; i ++) {
+            adj.add(i , new ArrayList<>());
+        }
         for(int[] pre : prerequisites) {
             adj.get(pre[1]).add(pre[0]);
         }
-        boolean[] path = new boolean[numCourses];
-        boolean[] visited = new boolean[numCourses];
-
-        for(int i = 0; i < numCourses; i ++ ) {
-            if(!visited[i]){
-                System.out.printf("i : %d , " ,i);
-                if(detectCycle(i , visited , path , adj)) return false;
-            }
+        boolean[] visited = new boolean[n];
+        boolean[] path = new boolean[n];
+        
+        for(int i = 0; i < adj.size(); i ++) {
+            if(!visited[i] && detectCycle(i , path , visited , adj)) return false;
         }
         return true;
-     }
+    }
 
-    private boolean detectCycle(int node, boolean[] visited , boolean[] path , List<List<Integer>> adj) {
-        visited[node] = path[node] = true;
-
-        List<Integer> neighbors = adj.get(node);
-        for(int nextNode : neighbors) {
-            // if(visited[nextNode]) return true;
-            if(!visited[nextNode] && detectCycle(nextNode , visited , path , adj)) return true;
-            if(path[nextNode]) return true;
+    private boolean detectCycle(int j , boolean[] path , boolean[] visited , List<List<Integer>> adj) {
+        path[j] = visited[j] = true;
+        List<Integer> neigh = adj.get(j);
+        for(int i = 0; i < neigh.size(); i ++) {
+            if(path[neigh.get(i)]) return true;
+            if(!visited[neigh.get(i)] && detectCycle(neigh.get(i) , path , visited , adj)) return true;
         }
-        path[node] = false;
+        path[j] = false;
         return false;
     }
 }
