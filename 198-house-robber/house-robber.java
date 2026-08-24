@@ -1,21 +1,17 @@
 class Solution {
-    int[] memo;
-
     public int rob(int[] nums) {
-        memo = new int[nums.length + 1];
-        Arrays.fill(memo, -1);
-        return rob(nums, nums.length - 1);
+        int[] computedValues = new int[nums.length];
+        Arrays.fill(computedValues, -1);
+        return rob(nums , 0, computedValues);
     }
-
-    private int rob(int[] nums, int i) {
-        if (i < 0) {
-            return 0;
+    private int rob(int[] nums , int n, int[] computedValues) {
+        if(n >= nums.length) return 0;
+        else if (n == nums.length - 1) return nums[n];
+        else{
+            if(computedValues[n] != -1) return computedValues[n];
+            int ans = Math.max(nums[n] + rob(nums , n + 2, computedValues), rob(nums , n + 1, computedValues));
+            computedValues[n] = ans;
+            return ans;
         }
-        if (memo[i] >= 0) {
-            return memo[i];
-        }
-        int result = Math.max(rob(nums, i - 2) + nums[i], rob(nums, i - 1));
-        memo[i] = result;
-        return result;
     }
 }
